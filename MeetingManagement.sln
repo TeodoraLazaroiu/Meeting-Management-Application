@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.WebApp", "MeetingManagement.WebApp\MeetingManagement.WebApp.csproj", "{9301EDD7-407F-4DF9-8E67-18E092076D85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.Persistance", "MeetingManagement.Persistance\MeetingManagement.Persistance.csproj", "{EF36BE4C-67DE-4E35-88C4-2BEA6A67EB5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.Application", "MeetingManagement.Application\MeetingManagement.Application.csproj", "{FDFE72B5-AF90-4858-B5D9-C2CCC416729E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.Core", "MeetingManagement.Core\MeetingManagement.Core.csproj", "{50D8E8C0-E3CB-4ED9-BB7D-350060EF8BC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9301EDD7-407F-4DF9-8E67-18E092076D85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9301EDD7-407F-4DF9-8E67-18E092076D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9301EDD7-407F-4DF9-8E67-18E092076D85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9301EDD7-407F-4DF9-8E67-18E092076D85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF36BE4C-67DE-4E35-88C4-2BEA6A67EB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF36BE4C-67DE-4E35-88C4-2BEA6A67EB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF36BE4C-67DE-4E35-88C4-2BEA6A67EB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF36BE4C-67DE-4E35-88C4-2BEA6A67EB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFE72B5-AF90-4858-B5D9-C2CCC416729E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFE72B5-AF90-4858-B5D9-C2CCC416729E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFE72B5-AF90-4858-B5D9-C2CCC416729E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFE72B5-AF90-4858-B5D9-C2CCC416729E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50D8E8C0-E3CB-4ED9-BB7D-350060EF8BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50D8E8C0-E3CB-4ED9-BB7D-350060EF8BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50D8E8C0-E3CB-4ED9-BB7D-350060EF8BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50D8E8C0-E3CB-4ED9-BB7D-350060EF8BC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F70A1FEA-7E6B-42D9-97B3-2762589E4FBB}
+	EndGlobalSection
+EndGlobal
