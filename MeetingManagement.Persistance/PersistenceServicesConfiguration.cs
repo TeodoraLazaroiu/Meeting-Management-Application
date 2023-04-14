@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MeetingManagement.Core.Interfaces;
+using MeetingManagement.Persistance.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MeetingManagement.Persistance
@@ -9,6 +11,9 @@ namespace MeetingManagement.Persistance
         {
             var dbSettings = configuration.GetSection("MongoDatabase");
             services.Configure<MongoDbSettings>(dbSettings);
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMongoDbContext, MongoDbContext>();
 
             return services;
         }
