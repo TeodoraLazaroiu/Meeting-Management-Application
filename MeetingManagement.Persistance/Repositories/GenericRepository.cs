@@ -1,5 +1,6 @@
 ﻿using MeetingManagement.Core.Common;
 using MeetingManagement.Core.Interfaces;
+using MeetingManagement.Persistance.Context;
 using MongoDB.Driver;
 
 namespace MeetingManagement.Persistance.Repositories

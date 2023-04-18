@@ -1,4 +1,5 @@
 ﻿using MeetingManagement.Core.Interfaces;
+using MeetingManagement.Persistance.Context;
 using MeetingManagement.Persistance.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

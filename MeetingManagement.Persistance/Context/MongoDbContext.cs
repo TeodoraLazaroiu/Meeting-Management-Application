@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace MeetingManagement.Persistance
+namespace MeetingManagement.Persistance.Context
 {
     internal class MongoDbContext : IMongoDbContext
     {
