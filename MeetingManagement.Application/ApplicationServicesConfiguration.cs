@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MeetingManagement.Application.Interfaces;
+using MeetingManagement.Application.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MeetingManagement.Application
 {
@@ -6,6 +8,7 @@ namespace MeetingManagement.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IUserService, UserService>();
             return services;
         }
     }

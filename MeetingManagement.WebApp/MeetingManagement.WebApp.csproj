@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MeetingManagement.Application\MeetingManagement.Application.csproj" />
+    <ProjectReference Include="..\MeetingManagement.Persistance\MeetingManagement.Persistance.csproj" />
   </ItemGroup>
 
 </Project>

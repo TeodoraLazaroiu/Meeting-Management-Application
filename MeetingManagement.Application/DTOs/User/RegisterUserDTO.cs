@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MeetingManagement.Application.DTOs
+namespace MeetingManagement.Application.DTOs.User
 {
     public class RegisterUserDTO
     {

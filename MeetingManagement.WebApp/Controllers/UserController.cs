@@ -1,4 +1,4 @@
-﻿using MeetingManagement.Application.DTOs;
+﻿using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,28 +15,64 @@ namespace MeetingManagement.WebApp.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "test";
-        }
-
-        [HttpPost]
-        public void Post([FromBody] RegisterUserDTO user)
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
         {
             try
             {
+                var users = await _userService.GetUserList();
+                return Ok(users);
 
             }
             catch (Exception)
             {
-                throw new Exception("The server encountered an unexpected error.");
+                throw;
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            try
+            {
+                var user = await _userService.GetUserEntity(id);
+                return Ok(user);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostUser([FromBody] RegisterUserDTO user)
+        {
+            try
+            {
+                var userId = await _userService.RegisterUser(user);
+                return CreatedAtAction(nameof(GetUser), new {id = userId }, userId);
+
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutUser(string id, [FromBody] UpdateUserDTO user)
         {
+            try
+            {
+                await _userService.UpdateUser(id, user);
+                return NoContent();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpDelete("{id}")]

@@ -1,9 +1,13 @@
-﻿using MeetingManagement.Application.DTOs;
+﻿using MeetingManagement.Application.DTOs.User;
+using MeetingManagement.Core.Entities;
 
 namespace MeetingManagement.Application.Interfaces
 {
     public interface IUserService
     {
-        Task RegisterUser(RegisterUserDTO registerUser);
+        Task<UserEntity> GetUserEntity(string id);
+        Task<List<UserEntity>> GetUserList();
+        Task<string> RegisterUser(RegisterUserDTO registerUser);
+        Task UpdateUser(string id, UpdateUserDTO updateUser);
     }
 }

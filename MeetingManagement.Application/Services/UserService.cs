@@ -1,7 +1,10 @@
-﻿using MeetingManagement.Application.DTOs;
+﻿using MeetingManagement.Application.DTOs.User;
+using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Entities;
 using MeetingManagement.Core.Interfaces;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
 namespace MeetingManagement.Application.Services
 {
@@ -13,24 +16,77 @@ namespace MeetingManagement.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task RegisterUser(RegisterUserDTO registerUser)
+        public async Task<List<UserEntity>> GetUserList()
         {
-            var user = new UserEntity();
+            return (await _userRepository.GetAllAsync()).ToList();
+        }
 
-            user.Email = registerUser.Email;
-            user.FirstName = registerUser.FirstName;
-            user.LastName = registerUser.LastName;
-            user.RoleTitle = registerUser.RoleTitle;
+        public async Task<UserEntity> GetUserEntity(string id)
+        {
+            try
+            {
+                var user = await _userRepository.GetAsync(id);
 
+                return user ?? throw new UserNotFoundException();
+            }
+            catch (Exception)
+            {
+                throw new UserNotFoundException();
+            }
+        }
+
+        public async Task<string> RegisterUser(RegisterUserDTO registerUser)
+        {
+            var user = new UserEntity
+            {
+                // check if user is already registered
+                Email = registerUser.Email,
+                FirstName = registerUser.FirstName,
+                LastName = registerUser.LastName,
+                RoleTitle = registerUser.RoleTitle
+            };
+
+            // add validation for team id
             if (registerUser.TeamId != null)
             {
                 user.TeamId = new Guid(registerUser.TeamId);
             }
+
+            var hashResult = HashPassword(registerUser.Password);
+            user.PasswordHash = hashResult.Item1;
+            user.PasswordSalt = hashResult.Item2;
+
+            user.Id = Guid.NewGuid();
+            user.CreatedDate = DateTime.UtcNow;
+            user.LastModified = DateTime.UtcNow;
+
+            await _userRepository.CreateAsync(user);
+
+            return user.Id.ToString();
         }
 
-        private (string, string) HashPassword(string password)
+        public async Task UpdateUser(string id, UpdateUserDTO updateUser)
         {
-            return ("", "");
+            var user = await _userRepository.GetAsync(id);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+        }
+
+        private static (string, string) HashPassword(string password)
+        {
+            byte[] saltBytes = new byte[16];
+            using (var random = RandomNumberGenerator.Create())
+            {
+                random.GetBytes(saltBytes);
+            }
+
+            string hashedPass = Convert.ToBase64String(KeyDerivation
+                .Pbkdf2(password, saltBytes, KeyDerivationPrf.HMACSHA256, 100000, 32));
+            var salt = Convert.ToBase64String(saltBytes);
+
+            return (hashedPass, salt);
         }
     }
 }
