@@ -9,5 +9,6 @@ namespace MeetingManagement.Application.Interfaces
         Task<List<UserEntity>> GetUserList();
         Task<string> RegisterUser(RegisterUserDTO registerUser);
         Task UpdateUser(string id, UpdateUserDTO updateUser);
+        Task DeleteUser(string id);
     }
 }

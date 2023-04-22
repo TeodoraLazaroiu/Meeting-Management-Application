@@ -37,9 +37,15 @@ namespace MeetingManagement.Application.Services
 
         public async Task<string> RegisterUser(RegisterUserDTO registerUser)
         {
+            var existingUser = _userRepository.GetUserByEmail(registerUser.Email);
+
+            if (existingUser != null)
+            {
+                throw new UserAlreadyExistsException();
+            }
+
             var user = new UserEntity
             {
-                // check if user is already registered
                 Email = registerUser.Email,
                 FirstName = registerUser.FirstName,
                 LastName = registerUser.LastName,
@@ -72,6 +78,23 @@ namespace MeetingManagement.Application.Services
             {
                 throw new UserNotFoundException();
             }
+
+            user.FirstName = updateUser.FirstName;
+            user.LastName = updateUser.LastName;
+            user.RoleTitle = updateUser.RoleTitle;
+
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task DeleteUser(string id)
+        {
+            var user = await _userRepository.GetAsync(id);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            await _userRepository.DeleteAsync(id);
         }
 
         private static (string, string) HashPassword(string password)

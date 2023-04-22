@@ -8,7 +8,7 @@ namespace MeetingManagement.Persistance.Repositories
     internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly IMongoDbContext _dbContext;
-        private IMongoCollection<T> _dbCollection;
+        protected IMongoCollection<T> _dbCollection;
         public GenericRepository(IMongoDbContext context)
         {
             _dbContext = context;

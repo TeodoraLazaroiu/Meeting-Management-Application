@@ -36,6 +36,10 @@ namespace MeetingManagement.WebApp.Middlewares
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorResponse = "The user was not found";
                     break;
+                case UserAlreadyExistsException:
+                    context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    errorResponse = "User with this email already exists";
+                    break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;

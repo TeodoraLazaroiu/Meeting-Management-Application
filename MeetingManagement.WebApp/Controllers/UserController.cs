@@ -76,8 +76,18 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
+            try
+            {
+                await _userService.DeleteUser(id);
+                return Ok();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
