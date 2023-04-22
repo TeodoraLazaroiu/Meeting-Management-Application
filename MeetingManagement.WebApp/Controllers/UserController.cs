@@ -1,11 +1,13 @@
 ﻿using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagement.WebApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -16,6 +18,7 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -46,6 +49,7 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> PostUser([FromBody] RegisterUserDTO user)
         {
             try
@@ -76,6 +80,7 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
