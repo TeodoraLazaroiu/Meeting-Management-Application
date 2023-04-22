@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 
 namespace MeetingManagement.Application.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         public UserService(IUserRepository userRepository)

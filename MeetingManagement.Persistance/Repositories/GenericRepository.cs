@@ -21,7 +21,7 @@ namespace MeetingManagement.Persistance.Repositories
             return await _dbCollection.Find(filter).ToListAsync();
         }
 
-        public async Task<T> GetAsync(string id)
+        public async Task<T?> GetAsync(string id)
         {
             var filter = Builders<T>.Filter.Eq(x => x.Id, new Guid(id));
             return await _dbCollection.Find(filter).SingleOrDefaultAsync();
