@@ -37,7 +37,7 @@ namespace MeetingManagement.Application.Services
 
         public async Task<string> RegisterUser(RegisterUserDTO registerUser)
         {
-            var existingUser = _userRepository.GetUserByEmail(registerUser.Email);
+            var existingUser = await _userRepository.GetUserByEmail(registerUser.Email);
 
             if (existingUser != null)
             {

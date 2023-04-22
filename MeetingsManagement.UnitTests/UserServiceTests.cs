@@ -1,3 +1,4 @@
+using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Exceptions;
 
 namespace MeetingsManagement.UnitTests
@@ -6,12 +7,18 @@ namespace MeetingsManagement.UnitTests
     {
         private IUserService _userService;
         private Mock<IUserRepository> _userRepositoryMock;
-        private string _userId;
+
+        private readonly string _userId = Guid.NewGuid().ToString();
+        private readonly string _email = "address@email.com";
+
         [SetUp]
         public void Setup()
         {
-            _userId = Guid.NewGuid().ToString();
             _userRepositoryMock = new Mock<IUserRepository>();
+
+            _userRepositoryMock.Setup(x => x.GetAsync(_userId)).ReturnsAsync(new UserEntity { Id = new Guid(_userId) });
+            _userRepositoryMock.Setup(x => x.GetUserByEmail(_email)).ReturnsAsync(new UserEntity { Email = _email });
+
             _userService = new UserService(_userRepositoryMock.Object);
         }
 
@@ -35,7 +42,7 @@ namespace MeetingsManagement.UnitTests
         }
 
         [Test]
-        public void GetUserEntity_UserNotFound_ThrowsError()
+        public void GetUserEntity_UserNotFound_ShouldThrow()
         {
             _userRepositoryMock.Setup(x => x.GetAsync(_userId)).ReturnsAsync((UserEntity?)null);
 
@@ -45,11 +52,37 @@ namespace MeetingsManagement.UnitTests
         [Test]
         public async Task GetUserEntity_UserFound_ReturnUserEntity()
         {
-            _userRepositoryMock.Setup(x => x.GetAsync(_userId)).ReturnsAsync(new UserEntity { Id = new Guid(_userId) });
             var user = await _userService.GetUserEntity(_userId);
 
             Assert.That(user, Is.TypeOf<UserEntity>());
             Assert.That(user.Id.ToString(), Is.EqualTo(_userId));
+        }
+        
+        [Test]
+        public async Task CreateUser_ValidRequest_ShouldCreateUser()
+        {
+            var userRegister = new RegisterUserDTO()
+            {
+                Password = "P@ssw0rd",
+                Email = _email
+            };
+            _userRepositoryMock.Setup(x => x.GetUserByEmail(_email)).ReturnsAsync((UserEntity?)null);
+
+            var id = await _userService.RegisterUser(userRegister);
+
+            _userRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<UserEntity>()), Times.Once, "User was no created");
+        }
+        [Test]
+        public void CreateUser_UserAlreadyExists_ShouldThrow()
+        {
+            var userRegister = new RegisterUserDTO()
+            {
+                Password = "P@ssw0rd",
+                Email = _email
+            };
+
+            Assert.ThrowsAsync<UserAlreadyExistsException>(async () => await _userService.RegisterUser(userRegister));
+            _userRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<UserEntity>()), Times.Never, "User was created");
         }
     }
 }

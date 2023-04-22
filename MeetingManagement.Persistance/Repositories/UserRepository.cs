@@ -9,7 +9,7 @@ namespace MeetingManagement.Persistance.Repositories
     {
         public UserRepository(IMongoDbContext context) : base(context) { }
 
-        public async Task<UserEntity> GetUserByEmail(string email)
+        public async Task<UserEntity?> GetUserByEmail(string email)
         {
             var filter = Builders<UserEntity>.Filter.Eq(x => x.Email, email);
             return await _dbCollection.Find(filter).SingleOrDefaultAsync();
