@@ -2,7 +2,7 @@
 
 namespace MeetingManagement.Core.Entities
 {
-    public class RecurringPattern : BaseEntity
+    public class RecurringPatternEntity : BaseEntity
     {
         public ReccurenceType ReccurenceType { get; set; }
         public int? SeparationCount { get; set; }

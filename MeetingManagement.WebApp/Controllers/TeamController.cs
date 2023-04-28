@@ -1,4 +1,5 @@
-﻿using MeetingManagement.Application.DTOs.User;
+﻿using MeetingManagement.Application.DTOs.Team;
+using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -10,25 +11,23 @@ namespace MeetingManagement.WebApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class TeamController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly ITeamService _teamService;
 
-        public UserController(IUserService userService)
+        public TeamController(ITeamService teamService)
         {
-            _userService = userService;
+            _teamService = teamService;
         }
 
         // todo: remove
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllTeams()
         {
             try
             {
-                var users = await _userService.GetUserList();
-                return Ok(users);
-
+                return Ok();
             }
             catch (Exception)
             {
@@ -37,13 +36,11 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetTeam()
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                var user = await _userService.GetUserEntity(userId);
-                return Ok(user);
+                return Ok();
 
             }
             catch (Exception)
@@ -54,12 +51,13 @@ namespace MeetingManagement.WebApp.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> PostUser([FromBody] RegisterUserDTO user)
+        public async Task<IActionResult> PostTeam([FromBody] CreateTeamDTO teamDetails)
         {
             try
             {
-                var userId = await _userService.RegisterUser(user);
-                return CreatedAtAction(nameof(GetUser), new {id = userId }, userId);
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                var teamEntity = await _teamService.CreateTeam(userId, teamDetails);
+                return CreatedAtAction(nameof(GetTeam), new {id = teamEntity.Id }, teamEntity.AccessCode);
 
             }
             catch (Exception)
@@ -69,7 +67,7 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromBody] UpdateUserDTO user)
+        public async Task<IActionResult> PutTeam([FromBody] UpdateUserDTO user)
         {
             try
             {
@@ -86,7 +84,7 @@ namespace MeetingManagement.WebApp.Controllers
 
         [HttpDelete("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteTeam()
         {
             try
             {

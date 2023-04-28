@@ -23,18 +23,24 @@ namespace MeetingManagement.Application.Services
         public async Task SignInUser(SignInUserDTO userCredentials)
         {
             var user = await _userRepository.GetUserByEmail(userCredentials.Email);
+
+            if (user == null)
+            {
+                throw new UserInvalidCredentialsException();
+            }
+
             var isPasswordCorrect = CheckPasswordHash(userCredentials.Password, user.PasswordSalt, user.PasswordHash);
 
-            if (!isPasswordCorrect || user == null)
+            if (!isPasswordCorrect)
             {
                 throw new UserInvalidCredentialsException();
             }
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.UserData, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                // add claim for team administrator
+                new Claim(ClaimConstants.UserIdClaim, user.Id.ToString()),
+                new Claim(ClaimConstants.UserEmailClaim, user.Email),
+                // add team role claim
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -64,5 +70,11 @@ namespace MeetingManagement.Application.Services
 
             return inputHash.Equals(hashedPassword);
         }
+    }
+
+    public static class ClaimConstants
+    {
+        public const string UserIdClaim = "";
+        public const string UserEmailClaim = "";
     }
 }

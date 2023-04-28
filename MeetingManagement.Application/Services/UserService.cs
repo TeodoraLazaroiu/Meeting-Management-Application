@@ -83,12 +83,15 @@ namespace MeetingManagement.Application.Services
             user.LastName = updateUser.LastName;
             user.RoleTitle = updateUser.RoleTitle;
 
+            user.LastModified = DateTime.UtcNow;
+
             await _userRepository.UpdateAsync(user);
         }
 
         public async Task DeleteUser(string id)
         {
             var user = await _userRepository.GetAsync(id);
+
             if (user == null)
             {
                 throw new UserNotFoundException();
