@@ -84,5 +84,7 @@ namespace MeetingsManagement.UnitTests
             Assert.ThrowsAsync<UserAlreadyExistsException>(async () => await _userService.RegisterUser(userRegister));
             _userRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<UserEntity>()), Times.Never, "User was created");
         }
+
+
     }
 }

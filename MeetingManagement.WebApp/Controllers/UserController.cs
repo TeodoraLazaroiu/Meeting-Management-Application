@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace MeetingManagement.WebApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
@@ -18,9 +18,8 @@ namespace MeetingManagement.WebApp.Controllers
         {
             _userService = userService;
         }
-
-        // todo: remove
-        [HttpGet]
+         // to do: remove
+        [HttpGet("all")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -36,7 +35,7 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> GetUser()
         {
             try
@@ -68,7 +67,7 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutUser([FromBody] UpdateUserDTO user)
         {
             try
@@ -84,7 +83,7 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteUser()
         {

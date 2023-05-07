@@ -11,9 +11,11 @@ namespace MeetingManagement.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly ITeamRepository _teamRepository;
+        public UserService(IUserRepository userRepository, ITeamRepository teamRepository)
         {
             _userRepository = userRepository;
+            _teamRepository = teamRepository;
         }
 
         public async Task<List<UserEntity>> GetUserList()
@@ -52,9 +54,17 @@ namespace MeetingManagement.Application.Services
                 RoleTitle = registerUser.RoleTitle
             };
 
-            // add validation for team id
             if (registerUser.TeamId != null)
             {
+                try
+                {
+                    await _teamRepository.GetAsync(registerUser.TeamId);
+                }
+                catch
+                {
+                    throw new TeamNotFoundException();
+                }
+
                 user.TeamId = new Guid(registerUser.TeamId);
             }
 

@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace MeetingManagement.WebApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/team")]
     [ApiController]
     [Authorize]
     public class TeamController : ControllerBase
@@ -49,9 +49,9 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [AllowAnonymous]
-        public async Task<IActionResult> PostTeam([FromBody] CreateTeamDTO teamDetails)
+        public async Task<IActionResult> PostCreateTeam([FromBody] CreateTeamDTO teamDetails)
         {
             try
             {
@@ -66,13 +66,29 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
+        [HttpPost("join")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PostJoinTeam([FromBody] string accessCode)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                await _teamService.JoinTeam(userId, accessCode);
+                return Ok();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTeam([FromBody] UpdateUserDTO user)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                await _userService.UpdateUser(userId, user);
                 return NoContent();
 
             }
@@ -89,7 +105,6 @@ namespace MeetingManagement.WebApp.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                await _userService.DeleteUser(userId);
                 return Ok();
 
             }

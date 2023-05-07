@@ -15,11 +15,18 @@ namespace MeetingManagement.Application
                     options.Cookie.Name = "SessionCookie";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
+                    options.Events.OnRedirectToLogin = (context) =>
+                    {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    };
                 });
-            services.AddHttpContextAccessor();
 
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITeamService, TeamService>();
+
+            services.AddHttpContextAccessor();
 
             return services;
         }

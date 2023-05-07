@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagement.WebApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -15,7 +15,7 @@ namespace MeetingManagement.WebApp.Controllers
             _authService = authService;
         }
 
-        [HttpPost("/signIn")]
+        [HttpPost("signIn")]
         public async Task<IActionResult> SignInUser([FromBody] SignInUserDTO userCredentials)
         {
             try
@@ -30,13 +30,13 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpPost("/signOut")]
+        [HttpPost("signOut")]
         public async Task<IActionResult> SignOutUser()
         {
             try
             {
                 await _authService.SignOutUser();
-                return Ok("Signed in successfully");
+                return Ok("Signed out successfully");
 
             }
             catch (Exception)
