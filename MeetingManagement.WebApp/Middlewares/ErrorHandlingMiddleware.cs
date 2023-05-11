@@ -48,12 +48,17 @@ namespace MeetingManagement.WebApp.Middlewares
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorResponse = "The team was not found";
                     break;
-                case TeamCannotBeDeleted:
+                case TeamDeletionException:
                     context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                     errorResponse = "Cannot delete team because it has members";
                     break;
+                case EventValidationException:
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse = exception.Message;
+                    break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    errorResponse = exception.Message;
                     break;
             }
 

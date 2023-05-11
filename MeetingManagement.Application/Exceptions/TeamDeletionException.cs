@@ -1,6 +1,6 @@
 ﻿namespace MeetingManagement.Application.Exceptions
 {
-	public class TeamCannotBeDeleted : Exception
+	public class TeamDeletionException : Exception
 	{
 	}
 }

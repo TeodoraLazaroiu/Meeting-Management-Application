@@ -53,7 +53,6 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpPost("create")]
-        [AllowAnonymous]
         public async Task<IActionResult> PostCreateTeam([FromBody] CreateTeamDTO teamDetails)
         {
             try
@@ -71,7 +70,6 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpPost("join")]
-        [AllowAnonymous]
         public async Task<IActionResult> PostJoinTeam(string accessCode)
         {
             try

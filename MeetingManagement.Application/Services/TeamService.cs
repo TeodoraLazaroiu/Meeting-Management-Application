@@ -110,7 +110,7 @@ namespace MeetingManagement.Application.Services
             var team = await GetTeamByUserId(userId);
             if (team.TeamMembers.Count != 1)
             {
-                throw new TeamCannotBeDeleted();
+                throw new TeamDeletionException();
             }
             else await _teamRepository.DeleteAsync(team.Id.ToString());
 

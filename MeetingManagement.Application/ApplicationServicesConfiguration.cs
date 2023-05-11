@@ -25,6 +25,7 @@ namespace MeetingManagement.Application
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IEventService, EventService>();
 
             services.AddHttpContextAccessor();
 

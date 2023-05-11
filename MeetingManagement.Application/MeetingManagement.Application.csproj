@@ -16,4 +16,10 @@
     <ProjectReference Include="..\MeetingManagement.Core\MeetingManagement.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="DTOs\Event\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTOs\Event\" />
+  </ItemGroup>
 </Project>
