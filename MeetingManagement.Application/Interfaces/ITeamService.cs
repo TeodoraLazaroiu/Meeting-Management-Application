@@ -6,9 +6,9 @@ namespace MeetingManagement.Application.Interfaces
     public interface ITeamService
     {
         Task<TeamEntity> CreateTeam(string userId, CreateTeamDTO teamDetails);
-        Task<TeamEntity> GetTeamByAccessCode(string accessCode);
-        Task<TeamEntity> GetTeamById(string teamId);
-        Task JoinTeam(string userId, string teamId);
-        Task JoinTeam(string userId, Guid teamId);
+        Task<TeamDetailsDTO> GetTeamByUserId(string userId);
+        Task<List<TeamEntity>> GetAllTeams();
+        Task JoinTeam(string userId, string accessCode);
+        Task DeleteTeam(string userId);
     }
 }

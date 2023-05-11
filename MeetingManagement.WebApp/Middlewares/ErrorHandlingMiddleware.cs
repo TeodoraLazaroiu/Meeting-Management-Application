@@ -40,9 +40,17 @@ namespace MeetingManagement.WebApp.Middlewares
                     context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                     errorResponse = "User with this email already exists";
                     break;
+                case UserInvalidCredentialsException:
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    errorResponse = "Invalid user credentials";
+                    break;
                 case TeamNotFoundException:
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorResponse = "The team was not found";
+                    break;
+                case TeamCannotBeDeleted:
+                    context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    errorResponse = "Cannot delete team because it has members";
                     break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

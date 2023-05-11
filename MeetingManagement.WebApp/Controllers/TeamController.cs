@@ -20,14 +20,15 @@ namespace MeetingManagement.WebApp.Controllers
             _teamService = teamService;
         }
 
-        // todo: remove
-        [HttpGet]
+        // to do: remove
+        [HttpGet("all")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllTeams()
         {
             try
             {
-                return Ok();
+                var teams = await _teamService.GetAllTeams();
+                return Ok(teams);
             }
             catch (Exception)
             {
@@ -35,12 +36,14 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> GetTeam()
         {
             try
             {
-                return Ok();
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                var team = await _teamService.GetTeamByUserId(userId);
+                return Ok(team);
 
             }
             catch (Exception)
@@ -57,6 +60,7 @@ namespace MeetingManagement.WebApp.Controllers
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
                 var teamEntity = await _teamService.CreateTeam(userId, teamDetails);
+                await _teamService.JoinTeam(userId, teamEntity.AccessCode);
                 return CreatedAtAction(nameof(GetTeam), new {id = teamEntity.Id }, teamEntity.AccessCode);
 
             }
@@ -68,7 +72,7 @@ namespace MeetingManagement.WebApp.Controllers
 
         [HttpPost("join")]
         [AllowAnonymous]
-        public async Task<IActionResult> PostJoinTeam([FromBody] string accessCode)
+        public async Task<IActionResult> PostJoinTeam(string accessCode)
         {
             try
             {
@@ -83,28 +87,14 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeam([FromBody] UpdateUserDTO user)
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                return NoContent();
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        [HttpDelete("{id}")]
-        [AllowAnonymous]
+        // to do: add check for admin
+        [HttpDelete]
         public async Task<IActionResult> DeleteTeam()
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                await _teamService.DeleteTeam(userId);
                 return Ok();
 
             }

@@ -84,7 +84,6 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpDelete]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteUser()
         {
             try

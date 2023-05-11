@@ -7,6 +7,7 @@ namespace MeetingsManagement.UnitTests
     {
         private IUserService _userService;
         private Mock<IUserRepository> _userRepositoryMock;
+        private Mock<ITeamRepository> _teamRepositoryMock;
 
         private readonly string _userId = Guid.NewGuid().ToString();
         private readonly string _email = "address@email.com";
@@ -15,11 +16,12 @@ namespace MeetingsManagement.UnitTests
         public void Setup()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
+            _teamRepositoryMock = new Mock<ITeamRepository>();
 
             _userRepositoryMock.Setup(x => x.GetAsync(_userId)).ReturnsAsync(new UserEntity { Id = new Guid(_userId) });
             _userRepositoryMock.Setup(x => x.GetUserByEmail(_email)).ReturnsAsync(new UserEntity { Email = _email });
 
-            _userService = new UserService(_userRepositoryMock.Object);
+            _userService = new UserService(_userRepositoryMock.Object, _teamRepositoryMock.Object);
         }
 
         [Test]

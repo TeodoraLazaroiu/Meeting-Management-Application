@@ -14,5 +14,11 @@ namespace MeetingManagement.Persistance.Repositories
             var filter = Builders<UserEntity>.Filter.Eq(x => x.Email, email);
             return await _dbCollection.Find(filter).SingleOrDefaultAsync();
         }
+
+        public async Task<List<UserEntity>> GetUsersByTeamId(string teamId)
+        {
+            var filter = Builders<UserEntity>.Filter.Eq(x => x.TeamId, new Guid(teamId));
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
     }
 }

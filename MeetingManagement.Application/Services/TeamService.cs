@@ -1,4 +1,5 @@
 ﻿using MeetingManagement.Application.DTOs.Team;
+using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Entities;
@@ -19,20 +20,44 @@ namespace MeetingManagement.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<TeamEntity> GetTeamById(string teamId)
+        public async Task<List<TeamEntity>> GetAllTeams()
         {
+            return (await _teamRepository.GetAllAsync()).ToList();
+        }
+
+        public async Task<TeamDetailsDTO> GetTeamByUserId(string userId)
+        {
+            var user = await _userService.GetUserEntity(userId);
+            var teamId = user.TeamId.ToString() ?? throw new TeamNotFoundException();
+
+            TeamEntity? team;
             try
             {
-                var team = await _teamRepository.GetAsync(teamId);
-                return team ?? throw new TeamNotFoundException();
+                team = await _teamRepository.GetAsync(teamId);
             }
             catch (Exception)
             {
                 throw new TeamNotFoundException();
             }
+
+            if (team == null)
+            {
+                throw new TeamNotFoundException();
+            }
+
+            var teamDetails = new TeamDetailsDTO()
+            {
+                Id = team.Id,
+                TeamName = team.TeamName,
+                AccessCode = team.AccessCode,
+                CreatedBy = team.CreatedBy
+            };
+
+            teamDetails.TeamMembers = await GetTeamMembers(teamId);
+            return teamDetails;
         }
-        
-        public async Task<TeamEntity> GetTeamByAccessCode(string accessCode)
+
+        private async Task<TeamEntity> GetTeamByAccessCode(string accessCode)
         {
             try
             {
@@ -59,18 +84,8 @@ namespace MeetingManagement.Application.Services
             newTeam.Id = Guid.NewGuid();
 
             await _teamRepository.CreateAsync(newTeam);
-            await JoinTeam(userId, newTeam.Id.ToString());
 
             return newTeam;
-        }
-
-        public async Task JoinTeam(string userId, Guid teamId)
-        {
-            var user = await _userService.GetUserEntity(userId);
-
-            user.TeamId = teamId;
-
-            await _userRepository.UpdateAsync(user);
         }
         
         public async Task JoinTeam(string userId, string accessCode)
@@ -81,6 +96,26 @@ namespace MeetingManagement.Application.Services
 
             user.TeamId = team.Id;
 
+            await _userRepository.UpdateAsync(user);
+        }
+
+        private async Task<List<UserInfoDTO>> GetTeamMembers(string teamId)
+        {
+            var users = await _userRepository.GetUsersByTeamId(teamId);
+            return users.Select(x => new UserInfoDTO(x)).ToList();
+        }
+
+        public async Task DeleteTeam(string userId)
+        {
+            var team = await GetTeamByUserId(userId);
+            if (team.TeamMembers.Count != 1)
+            {
+                throw new TeamCannotBeDeleted();
+            }
+            else await _teamRepository.DeleteAsync(team.Id.ToString());
+
+            var user = await _userService.GetUserEntity(userId);
+            user.TeamId = null;
             await _userRepository.UpdateAsync(user);
         }
 
