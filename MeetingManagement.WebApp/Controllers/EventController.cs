@@ -1,6 +1,4 @@
 ﻿using MeetingManagement.Application.DTOs.Event;
-using MeetingManagement.Application.DTOs.Team;
-using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +19,9 @@ namespace MeetingManagement.WebApp.Controllers
             _eventService = eventService;
         }
 
-        [HttpGet]
+        [HttpGet("{month?}/{day?}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetUserEvents()
+        public async Task<IActionResult> GetUserEvents(int month = 0, int day = 0)
         {
             try
             {
@@ -44,7 +42,24 @@ namespace MeetingManagement.WebApp.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                return Ok();
+                var events = await _eventService.GetEventsForTeam(userId);
+                return Ok(events);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("intervals")]
+        public async Task<IActionResult> GenerateEventIntervals([FromBody] EventPlanningDTO eventPlan)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                var intervals = await _eventService.GenerateEventIntervals(userId, eventPlan);
+                return Ok(intervals);
 
             }
             catch (Exception)

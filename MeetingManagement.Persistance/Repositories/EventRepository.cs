@@ -14,5 +14,11 @@ namespace MeetingManagement.Persistance.Repositories
             var filter = Builders<EventEntity>.Filter.AnyEq(x => x.Attendes, new Guid(userId));
             return await _dbCollection.Find(filter).ToListAsync();
         }
+
+        public async Task<List<EventEntity>> GetEventsForUserIds(List<Guid> userIds)
+        {
+            var filter = Builders<EventEntity>.Filter.AnyIn(x => x.Attendes, userIds);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace MeetingManagement.Core.Entities
         public int? SeparationCount { get; set; }
         public int? NumberOfOccurences { get; set; }
         public List<int>? DaysOfWeek { get; set; }
-        public int? WeekOfMonth { get; set; }
+        public int? DayOfWeek { get; set; }
         public int? DayOfMonth { get; set; }
     }
 }

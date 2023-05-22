@@ -7,6 +7,8 @@ namespace MeetingManagement.Application.Interfaces
 	{
 		Task CreateEvent(string userId, CreateEventDTO eventDetails);
 		Task<List<EventEntity>> GetEventsForUser(string userId);
+		Task<List<EventEntity>> GetEventsForTeam(string userId);
+		Task<List<EventIntervalsDTO>> GenerateEventIntervals(string userId, EventPlanningDTO eventPlan);
 
     }
 }

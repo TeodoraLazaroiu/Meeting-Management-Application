@@ -1,5 +1,4 @@
-﻿using System;
-using MeetingManagement.Application.DTOs.Event;
+﻿using MeetingManagement.Application.DTOs.Event;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Common;
@@ -12,11 +11,14 @@ namespace MeetingManagement.Application.Services
 	{
         private IEventRepository _eventRepository;
         private IRecurringPatternRepository _recurringPatternRepository;
+        private ITeamService _teamService;
 
-        public EventService(IEventRepository eventRepository, IRecurringPatternRepository recurringPatternRepository)
+        public EventService(IEventRepository eventRepository, IRecurringPatternRepository
+            recurringPatternRepository, ITeamService teamService)
         {
             _eventRepository = eventRepository;
             _recurringPatternRepository = recurringPatternRepository;
+            _teamService = teamService;
         }
 
 		public async Task CreateEvent(string userId, CreateEventDTO eventDetails)
@@ -102,7 +104,7 @@ namespace MeetingManagement.Application.Services
                 recurringPattern.SeparationCount = eventDetails.SeparationCount;
                 recurringPattern.NumberOfOccurences = eventDetails.NumberOfOccurences;
                 recurringPattern.DaysOfWeek = eventDetails.DaysOfWeek;
-                recurringPattern.WeekOfMonth = eventDetails.WeekOfMonth;
+                recurringPattern.DayOfWeek = eventDetails.DayOfWeek;
                 recurringPattern.DayOfMonth = eventDetails.DayOfMonth;
 
                 await _recurringPatternRepository.CreateAsync(recurringPattern);
@@ -116,6 +118,150 @@ namespace MeetingManagement.Application.Services
             var events = await _eventRepository.GetEventsByUserId(userId);
             return events;
         }
-	}
+
+        public async Task<List<EventEntity>> GetEventsForTeam(string userId)
+        {
+            var teamDetails = await _teamService.GetTeamByUserId(userId);
+            var userIds = teamDetails.TeamMembers.Select(x => x.Id).ToList();
+            var events = await _eventRepository.GetEventsForUserIds(userIds);
+            return events;
+        }
+
+        public async Task<List<EventIntervalsDTO>> GenerateEventIntervals(string userId, EventPlanningDTO eventPlan)
+        {
+            var users = new List<Guid>();
+            users.AddRange(eventPlan.Attendes);
+            users.Add(new Guid(userId));
+
+            // add validation for input
+
+            var events = await _eventRepository.GetEventsForUserIds(users);
+            var eventsForToday = events.Where(x => x.StartDate <= DateTime.UtcNow && x.EndDate >= DateTime.UtcNow).ToList();
+
+            // to do: get working hours for team
+            var workingHours = (8, 18);
+            var intervals = new List<(int, int)>();
+
+            for (int i = workingHours.Item1; i < workingHours.Item2; i++)
+            {
+                intervals.Add((i, i + 1));
+            }
+
+            foreach (var eventEntry in eventsForToday)
+            {
+                int start = 0, end = 0;
+                if (eventEntry.IsRecurring)
+                {
+                    var recurrence = await _recurringPatternRepository.GetAsync(eventEntry.Id.ToString())
+                        ?? throw new EventNotFoundException();
+
+                    if (recurrence.ReccurenceType == ReccurenceType.Daily)
+                    {
+                        if (recurrence.DaysOfWeek == null || !recurrence.DaysOfWeek.Any())
+                        {
+                            start = eventEntry.StartTime.Hours;
+                            end = eventEntry.EndTime.Hours;
+                        }
+                        else
+                        {
+                            var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
+                            var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
+                            var day = (int)dateOnly.DayOfWeek;
+
+                            if (day == 0) day = 7;
+
+                            if (recurrence.DaysOfWeek.Contains(day))
+                            {
+                                start = eventEntry.StartTime.Hours;
+                                end = eventEntry.EndTime.Hours;
+                            }
+                        }
+                    }
+                    else if (recurrence.ReccurenceType == ReccurenceType.Weekly)
+                    {
+                        var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
+                        var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
+                        var day = (int)dateOnly.DayOfWeek;
+
+                        if (day == 0) day = 7;
+
+                        if (recurrence.SeparationCount == 0 || recurrence.SeparationCount == null)
+                        {
+                            if (recurrence.DayOfWeek == day)
+                            {
+                                start = eventEntry.StartTime.Hours;
+                                end = eventEntry.EndTime.Hours;
+                            }
+                        }
+                        else
+                        {
+                            int separation = (int)recurrence.SeparationCount;
+                            var startDate = DateOnly.FromDateTime(eventEntry.StartDate).AddDays(day - 1);
+                            var endDate = DateOnly.FromDateTime(eventEntry.EndDate);
+
+                            while (startDate < endDate)
+                            {
+                                if (startDate == dateOnly)
+                                {
+                                    start = eventEntry.StartTime.Hours;
+                                    end = eventEntry.EndTime.Hours;
+                                }
+                                startDate.AddDays(7 * (separation + 1));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
+                        var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
+                        var day = dateOnly.Day;
+
+                        if (recurrence.SeparationCount == 0 || recurrence.SeparationCount == null)
+                        {
+                            if (recurrence.DayOfMonth == day)
+                            {
+                                start = eventEntry.StartTime.Hours;
+                                end = eventEntry.EndTime.Hours;
+                            }
+                        }
+                        else
+                        {
+                            int separation = (int)recurrence.SeparationCount;
+                            var startDate = DateOnly.FromDateTime(eventEntry.StartDate).AddDays(day - 1);
+                            var endDate = DateOnly.FromDateTime(eventEntry.EndDate);
+
+                            while (startDate < endDate)
+                            {
+                                if (startDate == dateOnly)
+                                {
+                                    start = eventEntry.StartTime.Hours;
+                                    end = eventEntry.EndTime.Hours;
+                                }
+                                startDate.AddMonths(separation + 1);
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    start = eventEntry.StartTime.Hours;
+                    end = eventEntry.EndTime.Hours;
+                }
+
+                for (int i = start; i < end; i++)
+                {
+                    if (intervals.Contains((i, i + 1)))
+                    {
+                        intervals.Remove((i, i + 1));
+                    }
+                }
+            }
+
+            var rnd = new Random();
+            intervals = intervals.OrderBy(x => rnd.Next()).Take(3).ToList();
+            return intervals.Select(x => new EventIntervalsDTO(x.Item1, x.Item2)).ToList();
+        }
+    }
 }
 

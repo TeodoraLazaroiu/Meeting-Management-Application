@@ -1,5 +1,4 @@
-﻿using System;
-using MeetingManagement.Core.Common;
+﻿using MeetingManagement.Core.Common;
 
 namespace MeetingManagement.Application.DTOs.Event
 {
@@ -17,7 +16,7 @@ namespace MeetingManagement.Application.DTOs.Event
         public int? SeparationCount { get; set; }
         public int? NumberOfOccurences { get; set; }
         public List<int>? DaysOfWeek { get; set; }
-        public int? WeekOfMonth { get; set; }
+        public int? DayOfWeek { get; set; }
         public int? DayOfMonth { get; set; }
     }
 }
