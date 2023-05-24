@@ -1,5 +1,4 @@
 ﻿using MeetingManagement.Core.Common;
-using MeetingManagement.Core.Entities;
 
 namespace MeetingManagement.Core.Entities
 {

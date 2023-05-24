@@ -19,14 +19,13 @@ namespace MeetingManagement.WebApp.Controllers
             _eventService = eventService;
         }
 
-        [HttpGet("{month?}/{day?}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetUserEvents(int month = 0, int day = 0)
+        [HttpGet("{year?}/{month?}/{day?}")]
+        public async Task<IActionResult> GetUserEvents(int year = 0, int month = 0, int day = 0)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                var events = await _eventService.GetEventsForUser(userId);
+                var events = await _eventService.GetEventsForUser(userId, year, month, day);
                 return Ok(events);
 
             }
@@ -36,13 +35,13 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpGet("team")]
-        public async Task<IActionResult> GetTeamEvents()
+        [HttpGet("team/{year?}/{month?}/{day?}")]
+        public async Task<IActionResult> GetTeamEvents(int year = 0, int month = 0, int day = 0)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                var events = await _eventService.GetEventsForTeam(userId);
+                var events = await _eventService.GetEventsForTeam(userId, year, month, day);
                 return Ok(events);
 
             }

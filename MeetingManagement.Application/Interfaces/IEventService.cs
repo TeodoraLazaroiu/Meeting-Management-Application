@@ -6,8 +6,8 @@ namespace MeetingManagement.Application.Interfaces
 	public interface IEventService
 	{
 		Task CreateEvent(string userId, CreateEventDTO eventDetails);
-		Task<List<EventEntity>> GetEventsForUser(string userId);
-		Task<List<EventEntity>> GetEventsForTeam(string userId);
+		Task<List<EventOccurenceDTO>> GetEventsForUser(string userId, int year, int month, int day);
+		Task<List<EventOccurenceDTO>> GetEventsForTeam(string userId, int year, int month, int day);
 		Task<List<EventIntervalsDTO>> GenerateEventIntervals(string userId, EventPlanningDTO eventPlan);
 
     }

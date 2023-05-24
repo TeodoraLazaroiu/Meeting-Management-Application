@@ -1,4 +1,5 @@
-﻿using MeetingManagement.Application.DTOs.Event;
+﻿using System;
+using MeetingManagement.Application.DTOs.Event;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Common;
@@ -113,18 +114,21 @@ namespace MeetingManagement.Application.Services
             await _eventRepository.CreateAsync(eventEntity);
         }
 
-        public async Task<List<EventEntity>> GetEventsForUser(string userId)
+        public async Task<List<EventOccurenceDTO>> GetEventsForUser(string userId, int year = 0, int month = 0, int day = 0)
         {
-            var events = await _eventRepository.GetEventsByUserId(userId);
-            return events;
+            var eventsFromDb = await _eventRepository.GetEventsByUserId(userId);
+            var eventOccurences = await GetEventsOccurences(eventsFromDb, year, month, day);
+            return eventOccurences;
         }
 
-        public async Task<List<EventEntity>> GetEventsForTeam(string userId)
+        public async Task<List<EventOccurenceDTO>> GetEventsForTeam(string userId, int year = 0, int month = 0, int day = 0)
         {
             var teamDetails = await _teamService.GetTeamByUserId(userId);
             var userIds = teamDetails.TeamMembers.Select(x => x.Id).ToList();
             var events = await _eventRepository.GetEventsForUserIds(userIds);
-            return events;
+
+            var eventOccurences = await GetEventsOccurences(events, year, month, day);
+            return eventOccurences;
         }
 
         public async Task<List<EventIntervalsDTO>> GenerateEventIntervals(string userId, EventPlanningDTO eventPlan)
@@ -133,10 +137,22 @@ namespace MeetingManagement.Application.Services
             users.AddRange(eventPlan.Attendes);
             users.Add(new Guid(userId));
 
-            // add validation for input
+            DateOnly selectedDate = new DateOnly();
+            try
+            {
+                var yearMonthDay = eventPlan.Date.Split("/").Select(Int32.Parse).ToList();
+                selectedDate = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
+            }
+            catch
+            {
+                throw new EventValidationException("Invalid date format. Should be dd/mm/yyyy");
+            }
 
             var events = await _eventRepository.GetEventsForUserIds(users);
-            var eventsForToday = events.Where(x => x.StartDate <= DateTime.UtcNow && x.EndDate >= DateTime.UtcNow).ToList();
+            var eventsForDate = events.Where(x => DateOnly.FromDateTime(x.StartDate)
+                <= selectedDate && DateOnly.FromDateTime(x.EndDate) >= selectedDate).ToList();
+            var eventOccurencesForDate = await GetEventsOccurences(eventsForDate,
+                    selectedDate.Year, selectedDate.Month, selectedDate.Day);
 
             // to do: get working hours for team
             var workingHours = (8, 18);
@@ -147,109 +163,20 @@ namespace MeetingManagement.Application.Services
                 intervals.Add((i, i + 1));
             }
 
-            foreach (var eventEntry in eventsForToday)
+            foreach (var eventOccurence in eventOccurencesForDate)
             {
-                int start = 0, end = 0;
-                if (eventEntry.IsRecurring)
-                {
-                    var recurrence = await _recurringPatternRepository.GetAsync(eventEntry.Id.ToString())
-                        ?? throw new EventNotFoundException();
+                int startHour, endHour;
+                var hourMinutes = eventOccurence.EndTime.Split(":").Select(Int32.Parse).ToList();
+                var startTime = new TimeOnly(hourMinutes[0], hourMinutes[1]);
+                startHour = startTime.Hour;
 
-                    if (recurrence.ReccurenceType == ReccurenceType.Daily)
-                    {
-                        if (recurrence.DaysOfWeek == null || !recurrence.DaysOfWeek.Any())
-                        {
-                            start = eventEntry.StartTime.Hours;
-                            end = eventEntry.EndTime.Hours;
-                        }
-                        else
-                        {
-                            var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
-                            var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
-                            var day = (int)dateOnly.DayOfWeek;
+                hourMinutes = eventOccurence.EndTime.Split(":").Select(Int32.Parse).ToList();
+                var endTime = new TimeOnly(hourMinutes[0], hourMinutes[1]);
 
-                            if (day == 0) day = 7;
+                if (endTime.Minute != 0) endHour = endTime.Hour + 1;
+                else endHour = endTime.Hour;
 
-                            if (recurrence.DaysOfWeek.Contains(day))
-                            {
-                                start = eventEntry.StartTime.Hours;
-                                end = eventEntry.EndTime.Hours;
-                            }
-                        }
-                    }
-                    else if (recurrence.ReccurenceType == ReccurenceType.Weekly)
-                    {
-                        var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
-                        var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
-                        var day = (int)dateOnly.DayOfWeek;
-
-                        if (day == 0) day = 7;
-
-                        if (recurrence.SeparationCount == 0 || recurrence.SeparationCount == null)
-                        {
-                            if (recurrence.DayOfWeek == day)
-                            {
-                                start = eventEntry.StartTime.Hours;
-                                end = eventEntry.EndTime.Hours;
-                            }
-                        }
-                        else
-                        {
-                            int separation = (int)recurrence.SeparationCount;
-                            var startDate = DateOnly.FromDateTime(eventEntry.StartDate).AddDays(day - 1);
-                            var endDate = DateOnly.FromDateTime(eventEntry.EndDate);
-
-                            while (startDate < endDate)
-                            {
-                                if (startDate == dateOnly)
-                                {
-                                    start = eventEntry.StartTime.Hours;
-                                    end = eventEntry.EndTime.Hours;
-                                }
-                                startDate.AddDays(7 * (separation + 1));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var yearMonthDay = eventPlan.StartDate.Split("/").Select(Int32.Parse).ToList();
-                        var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
-                        var day = dateOnly.Day;
-
-                        if (recurrence.SeparationCount == 0 || recurrence.SeparationCount == null)
-                        {
-                            if (recurrence.DayOfMonth == day)
-                            {
-                                start = eventEntry.StartTime.Hours;
-                                end = eventEntry.EndTime.Hours;
-                            }
-                        }
-                        else
-                        {
-                            int separation = (int)recurrence.SeparationCount;
-                            var startDate = DateOnly.FromDateTime(eventEntry.StartDate).AddDays(day - 1);
-                            var endDate = DateOnly.FromDateTime(eventEntry.EndDate);
-
-                            while (startDate < endDate)
-                            {
-                                if (startDate == dateOnly)
-                                {
-                                    start = eventEntry.StartTime.Hours;
-                                    end = eventEntry.EndTime.Hours;
-                                }
-                                startDate.AddMonths(separation + 1);
-                            }
-                        }
-                    }
-
-                }
-                else
-                {
-                    start = eventEntry.StartTime.Hours;
-                    end = eventEntry.EndTime.Hours;
-                }
-
-                for (int i = start; i < end; i++)
+                for (int i = startHour; i < endHour; i++)
                 {
                     if (intervals.Contains((i, i + 1)))
                     {
@@ -259,8 +186,123 @@ namespace MeetingManagement.Application.Services
             }
 
             var rnd = new Random();
-            intervals = intervals.OrderBy(x => rnd.Next()).Take(3).ToList();
+            intervals = intervals.OrderBy(x => rnd.Next()).Take(3).OrderBy(x => x.Item1).ToList();
             return intervals.Select(x => new EventIntervalsDTO(x.Item1, x.Item2)).ToList();
+        }
+
+        private async Task<List<EventOccurenceDTO>> GetEventsOccurences(List<EventEntity> events, int year = 0, int month = 0, int day = 0)
+        {
+            var eventsOccurences = new List<EventOccurenceDTO>();
+
+            foreach (var eventEntry in events)
+            {
+                if (eventEntry.IsRecurring)
+                {
+                    var recurrence = await _recurringPatternRepository.GetAsync(eventEntry.Id.ToString())
+                        ?? throw new EventNotFoundException();
+
+                    var currentDate = eventEntry.StartDate;
+                    var endDate = eventEntry.EndDate;
+
+                    while (currentDate <= endDate)
+                    {
+                        if (recurrence.ReccurenceType == ReccurenceType.Daily)
+                        {
+                            if (recurrence.DaysOfWeek == null)
+                            {
+                                throw new EventValidationException("Daily recurrence must provide DaysOfWeek parameter");
+                            }
+
+                            var daysOfWeek = Enumerable.Range(1, 7).ToList();
+                            if (recurrence.DaysOfWeek == daysOfWeek)
+                            {
+                                eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
+                            }
+                            else
+                            {
+                                var currentDayOfWeek = (int)currentDate.DayOfWeek;
+                                if (currentDayOfWeek == 0) currentDayOfWeek = 7;
+
+                                if (recurrence.DaysOfWeek.Contains(currentDayOfWeek))
+                                {
+                                    eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
+                                }
+                            }
+                            currentDate = currentDate.AddDays(1);
+                        }
+                        else if (recurrence.ReccurenceType == ReccurenceType.Weekly)
+                        {
+                            if (recurrence.DayOfWeek == null)
+                            {
+                                throw new EventValidationException("Weekly recurrence must provide DayOfWeek parameter");
+                            }
+
+                            var currentDayOfWeek = (int)currentDate.DayOfWeek;
+                            if (currentDayOfWeek == 0) currentDayOfWeek = 7;
+
+                            if (recurrence.DayOfWeek != currentDayOfWeek)
+                            {
+                                if (currentDayOfWeek < recurrence.DayOfWeek)
+                                {
+                                    var offset = recurrence.DayOfWeek - currentDayOfWeek;
+                                    currentDate = currentDate.AddDays((int)offset);
+                                }
+                                else
+                                {
+                                    var offset = 7 - (currentDayOfWeek - recurrence.DayOfWeek);
+                                    currentDate = currentDate.AddDays((int)offset);
+                                }
+                            }
+                            else
+                            {
+                                eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
+                                var separation = recurrence.SeparationCount ?? throw new
+                                    EventValidationException("Weekly recurrence must provide SeparationCount parameter");
+                                currentDate.AddDays(7 * (separation + 1));
+                            }
+                        }
+                        else
+                        {
+                            if (recurrence.DayOfMonth == null)
+                            {
+                                throw new EventValidationException("Monthly recurrence must provide DayOfMonth parameter");
+                            }
+
+                            var daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+                            var lastDays = new List<int>() { 29, 30, 31 };
+
+                            if (currentDate.Day != recurrence.DayOfMonth)
+                            {
+                                var targetDay = recurrence.DayOfMonth;
+                                if (recurrence.DayOfMonth > daysInMonth)
+                                {
+                                    targetDay = daysInMonth;
+                                }
+
+                                while (currentDate.Day != targetDay)
+                                {
+                                    currentDate = currentDate.AddDays(1);
+                                }
+                            }
+
+                            eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
+                            var separation = recurrence.SeparationCount ?? throw new
+                                EventValidationException("Monthly recurrence must provide SeparationCount parameter");
+                            currentDate.AddMonths(separation + 1);
+                        }
+                    }
+                }
+                else
+                {
+                    eventsOccurences.Add(new EventOccurenceDTO(eventEntry, eventEntry.StartDate));
+                }
+            }
+
+            if (year != 0) eventsOccurences = eventsOccurences.Where(x => DateTime.Parse(x.Date).Year == year).ToList();
+            if (month != 0) eventsOccurences = eventsOccurences.Where(x => DateTime.Parse(x.Date).Month == month).ToList();
+            if (day != 0) eventsOccurences = eventsOccurences.Where(x => DateTime.Parse(x.Date).Day == day).ToList();
+
+            return eventsOccurences;
         }
     }
 }
