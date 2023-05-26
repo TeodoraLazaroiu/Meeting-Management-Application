@@ -11,6 +11,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var origins = "origins";
+var frontendUrl = builder.Configuration.GetSection("frontend").Value;
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: origins, builder =>
+        {
+            builder.WithOrigins(frontendUrl ?? "")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+        });
+});
 
 var app = builder.Build();
 
@@ -24,6 +36,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors(origins);
 
 app.MapControllers();
 

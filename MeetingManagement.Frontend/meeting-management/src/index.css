@@ -11,10 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.centered-element {
-  left: 3%;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
