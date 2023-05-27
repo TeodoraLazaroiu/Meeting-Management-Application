@@ -11,13 +11,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var origins = "origins";
-var frontendUrl = builder.Configuration.GetSection("frontend").Value;
+var config = builder.Configuration.GetRequiredSection("Frontend").Value;
+string frontendUrl = config == null ? "" : config.ToString();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: origins, builder =>
+    options.AddDefaultPolicy(builder =>
         {
-            builder.WithOrigins(frontendUrl ?? "")
+            builder.WithOrigins(frontendUrl)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -37,7 +37,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors(origins);
+app.UseCors();
 
 app.MapControllers();
 

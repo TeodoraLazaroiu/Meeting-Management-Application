@@ -2,22 +2,39 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const apiUrl = 'https://localhost:7246/api'
-    const handleSubmit = (e) => {
+    const apiUrl = process.env.REACT_APP_API_URL
+    const client = axios.create({
+      withCredentials: true,
+      baseURL: apiUrl
+    })
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        axios.post(apiUrl + '/auth/signIn', {
-          "email": email,
-          "password": password
-        })
-        .then((response) => {
-          console.log(response)
-        })
+        var form = document.querySelector('.needs-validation');
+        form.classList.add('was-validated');
+
+        if (form.checkValidity())
+        {
+            await client.post('/auth/signIn', {
+              "email": email,
+              "password": password
+            })
+            .then((response) => {
+              console.log(response)
+            })
+            .catch((error) => {
+              toast.error(error.response.data)
+            });
+        }
+      
     }
 
     const styles = {
@@ -37,15 +54,15 @@ export const Login = () => {
       <div className="col-lg-6 mb-5 mb-lg-0">
         <div className="card">
           <div className="card-body py-5 px-md-5">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="needs-validation" noValidate>
               <div className="form-outline mb-4">
                 <label className="form-label" htmlFor="emailInput">Email</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="emailInput" className="form-control" />
+                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="emailInput" className="form-control" required/>
               </div>
 
               <div className="form-outline mb-4">
                 <label className="form-label" htmlFor="passwordInput">Password</label>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="passwordInput" className="form-control" />
+                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="passwordInput" className="form-control" required/>
               </div>
 
               <div className="row container-fluid">

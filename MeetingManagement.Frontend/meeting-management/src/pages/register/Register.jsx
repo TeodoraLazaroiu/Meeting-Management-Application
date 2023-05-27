@@ -1,10 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import axios from 'axios';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
+import { FirstRegisterForm } from '../../components/form/FirstRegisterForm'
+import { SecondRegisterForm } from '../../components/form/SecondRegisterForm'
 
 export const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [roleTitle, setRoleTitle] = useState('');
+    const [formNumber, setFormNumber] = useState(1);
+
+    const apiUrl = process.env.REACT_APP_API_URL
+    const client = axios.create({
+      withCredentials: true,
+      baseURL: apiUrl
+    })
 
     const styles = {
         main : {
@@ -14,41 +28,54 @@ export const Register = () => {
         }
       }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const firstCallback = data => {
+        setEmail(data.email)
+        setPassword(data.password)
+        setFormNumber(data.nextForm)
     }
-     
+    
+    const secondCallback = data => {
+        setFirstName(data.firstName)
+        setLastName(data.lastName)
+        setRoleTitle(data.roleTitle)
+        setFormNumber(data.nextForm)
+
+        if (data.nextForm === 2) registerUser()
+    }
+
+    const registerUser = async () => {
+        await client.post('/user', {
+            "email": email,
+            "password": password,
+            "firstName": firstName,
+            "lastName": lastName,
+            "roleTitle": roleTitle
+          })
+          .then((response) => {
+            console.log(response)
+            toast.success('Account created successfully')
+          })
+          .catch((error) => {
+            console.log(error.response.data)
+            toast.error(error.response.data)
+          });
+    }
+
     return (
         <div className="container-fluid" style={styles.main}>
-          <div className="apx-4 py-5 px-md-5 text-lg-start">
-              <div className="row gx-lg-5">
+        <div className="apx-4 py-5 px-md-5 text-lg-start">
+            <div className="row gx-lg-5">
                 <WelcomeMessage/>
         
-      <div className="col-lg-6 mb-5 mb-lg-0">
+    <div className="col-lg-6 mb-5 mb-lg-0">
         <div className="card">
-          <div className="card-body py-5 px-md-5">
-            <form onSubmit={handleSubmit}>
-              <div className="form-outline mb-4">
-                <label className="form-label" htmlFor="emailInput">Email</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="emailInput" className="form-control" />
-              </div>
-
-              <div className="form-outline mb-4">
-                <label className="form-label" htmlFor="passwordInput">Password</label>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="passwordInput" className="form-control" />
-              </div>
-
-              <div className="row container-fluid">
-              <button type="submit" className="col-sm-3 btn btn-primary btn-block">
-                Next
-              </button>
-              <span className="col-sm-9 px-3 pt-2">Already have an account? <Link to="/login">Sign in</Link></span>
-              </div>
-            </form>
-          </div>
+        <div className="card-body py-5 px-md-5">
+            {formNumber === 1 && <FirstRegisterForm firstCallback={firstCallback}/>}
+            {formNumber === 2 && <SecondRegisterForm secondCallback={secondCallback}/>}
         </div>
-      </div>
-              </div>
+        </div>
+    </div>
+            </div>
             </div>
         </div>
     )

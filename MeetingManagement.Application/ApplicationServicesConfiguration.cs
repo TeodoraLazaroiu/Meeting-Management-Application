@@ -1,6 +1,7 @@
 ﻿using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Application.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MeetingManagement.Application
@@ -20,6 +21,7 @@ namespace MeetingManagement.Application
                         context.Response.StatusCode = 401;
                         return Task.CompletedTask;
                     };
+                    options.Cookie.SameSite = SameSiteMode.None;
                 });
 
             services.AddScoped<IAuthService, AuthService>();
