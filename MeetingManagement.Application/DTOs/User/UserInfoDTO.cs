@@ -1,4 +1,5 @@
-﻿using MeetingManagement.Core.Entities;
+﻿using MeetingManagement.Core.Common;
+using MeetingManagement.Core.Entities;
 
 namespace MeetingManagement.Application.DTOs.User
 {
@@ -8,8 +9,9 @@ namespace MeetingManagement.Application.DTOs.User
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string? RoleTitle { get; set; }
+        public string? JobTitle { get; set; }
         public Guid? TeamId { get; set; }
+        public RoleType Role { get; set; }
 
         public UserInfoDTO(UserEntity user)
         {
@@ -17,8 +19,9 @@ namespace MeetingManagement.Application.DTOs.User
             FirstName = user.FirstName;
             LastName = user.LastName;
             Email = user.Email;
-            RoleTitle = user.RoleTitle;
+            JobTitle = user.JobTitle;
             TeamId = user.TeamId;
+            Role = user.Role;
         }
     }
 }

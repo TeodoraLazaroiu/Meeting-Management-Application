@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MeetingManagement.Core.Common;
 
 namespace MeetingManagement.Application.DTOs.User
 {
@@ -8,6 +9,6 @@ namespace MeetingManagement.Application.DTOs.User
         public string FirstName { get; set; } = null!;
         [Required]
         public string LastName { get; set; } = null!;
-        public string? RoleTitle { get; set; }
+        public string? JobTitle { get; set; }
     }
 }

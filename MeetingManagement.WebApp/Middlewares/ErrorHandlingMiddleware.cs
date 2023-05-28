@@ -50,7 +50,7 @@ namespace MeetingManagement.WebApp.Middlewares
                     break;
                 case TeamDeletionException:
                     context.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                    errorResponse = "Cannot delete team because it has members";
+                    errorResponse = exception.Message;
                     break;
                 case EventValidationException:
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;

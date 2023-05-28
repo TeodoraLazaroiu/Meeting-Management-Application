@@ -1,6 +1,7 @@
 ﻿using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
+using MeetingManagement.Core.Common;
 using MeetingManagement.Core.Entities;
 using MeetingManagement.Core.Interfaces;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -37,6 +38,12 @@ namespace MeetingManagement.Application.Services
             }
         }
 
+        public async Task<UserInfoDTO> GetUserInfo(string id)
+        {
+            var user = await GetUserEntity(id);
+            return new UserInfoDTO(user);
+        }
+
         public async Task<string> RegisterUser(RegisterUserDTO registerUser)
         {
             var existingUser = await _userRepository.GetUserByEmail(registerUser.Email);
@@ -51,26 +58,15 @@ namespace MeetingManagement.Application.Services
                 Email = registerUser.Email,
                 FirstName = registerUser.FirstName,
                 LastName = registerUser.LastName,
-                RoleTitle = registerUser.RoleTitle
+                JobTitle = registerUser.JobTitle
             };
-
-            if (registerUser.TeamId != null)
-            {
-                try
-                {
-                    await _teamRepository.GetAsync(registerUser.TeamId);
-                }
-                catch
-                {
-                    throw new TeamNotFoundException();
-                }
-
-                user.TeamId = new Guid(registerUser.TeamId);
-            }
 
             var hashResult = HashPassword(registerUser.Password);
             user.PasswordHash = hashResult.Item1;
             user.PasswordSalt = hashResult.Item2;
+
+            user.TeamId = null;
+            user.Role = RoleType.NoTeam;
 
             user.Id = Guid.NewGuid();
             user.CreatedDate = DateTime.UtcNow;
@@ -91,7 +87,7 @@ namespace MeetingManagement.Application.Services
 
             user.FirstName = updateUser.FirstName;
             user.LastName = updateUser.LastName;
-            user.RoleTitle = updateUser.RoleTitle;
+            user.JobTitle = updateUser.JobTitle;
 
             user.LastModified = DateTime.UtcNow;
 

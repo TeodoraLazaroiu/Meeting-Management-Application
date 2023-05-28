@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using MeetingManagement.Core.Common;
 
 namespace MeetingManagement.Application.Services
 {
@@ -40,7 +41,7 @@ namespace MeetingManagement.Application.Services
             {
                 new Claim(ClaimConstants.UserIdClaim, user.Id.ToString()),
                 new Claim(ClaimConstants.UserEmailClaim, user.Email),
-                // add team role claim
+                new Claim(ClaimConstants.UserRole, user.Role.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -76,5 +77,6 @@ namespace MeetingManagement.Application.Services
     {
         public const string UserIdClaim = "";
         public const string UserEmailClaim = "";
+        public const string UserRole = "";
     }
 }

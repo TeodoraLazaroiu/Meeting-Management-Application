@@ -1,6 +1,7 @@
 ﻿using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Application.Services;
+using MeetingManagement.Core.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -91,7 +92,6 @@ namespace MeetingManagement.WebApp.Controllers
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
                 await _userService.DeleteUser(userId);
                 return Ok();
-
             }
             catch (Exception)
             {

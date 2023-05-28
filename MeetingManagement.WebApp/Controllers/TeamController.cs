@@ -2,6 +2,7 @@
 using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Application.Services;
+using MeetingManagement.Core.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -85,15 +86,19 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        // to do: add check for admin
         [HttpDelete]
         public async Task<IActionResult> DeleteTeam()
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                await _teamService.DeleteTeam(userId);
-                return Ok();
+                var userRole = User.FindFirstValue(ClaimConstants.UserRole);
+                if (userRole == RoleType.TeamAdmin.ToString())
+                {
+                    await _teamService.DeleteTeam(userId);
+                    return Ok();
+                }
+                else return Forbid();
 
             }
             catch (Exception)

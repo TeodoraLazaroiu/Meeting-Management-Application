@@ -2,6 +2,7 @@
 using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
+using MeetingManagement.Core.Common;
 using MeetingManagement.Core.Entities;
 using MeetingManagement.Core.Interfaces;
 
@@ -77,6 +78,7 @@ namespace MeetingManagement.Application.Services
             newTeam.TeamName = teamDetails.TeamName;
             newTeam.CreatedBy = new Guid(userId);
             newTeam.AccessCode = GenerateTeamAccessCode();
+            newTeam.WorkingHours = teamDetails.WorkingHours;
 
             newTeam.CreatedDate = DateTime.UtcNow;
             newTeam.LastModified = DateTime.UtcNow;
@@ -84,6 +86,10 @@ namespace MeetingManagement.Application.Services
             newTeam.Id = Guid.NewGuid();
 
             await _teamRepository.CreateAsync(newTeam);
+
+            var user = await _userService.GetUserEntity(userId);
+            user.TeamId = newTeam.Id;
+            user.Role = RoleType.TeamAdmin;
 
             return newTeam;
         }
@@ -95,6 +101,7 @@ namespace MeetingManagement.Application.Services
             var team = await GetTeamByAccessCode(accessCode);
 
             user.TeamId = team.Id;
+            user.Role = RoleType.TeamMember;
 
             await _userRepository.UpdateAsync(user);
         }
@@ -107,14 +114,18 @@ namespace MeetingManagement.Application.Services
 
         public async Task DeleteTeam(string userId)
         {
+            var user = await _userService.GetUserEntity(userId);
+            if (user.Role != RoleType.TeamAdmin)
+            {
+                throw new TeamDeletionException("Only the team admin can perform this operation");
+            }
             var team = await GetTeamByUserId(userId);
             if (team.TeamMembers.Count != 1)
             {
-                throw new TeamDeletionException();
+                throw new TeamDeletionException("The team must have no members before being deleted");
             }
             else await _teamRepository.DeleteAsync(team.Id.ToString());
 
-            var user = await _userService.GetUserEntity(userId);
             user.TeamId = null;
             await _userRepository.UpdateAsync(user);
         }
