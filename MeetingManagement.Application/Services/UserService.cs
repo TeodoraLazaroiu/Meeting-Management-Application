@@ -13,6 +13,7 @@ namespace MeetingManagement.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ITeamRepository _teamRepository;
+
         public UserService(IUserRepository userRepository, ITeamRepository teamRepository)
         {
             _userRepository = userRepository;
@@ -85,10 +86,31 @@ namespace MeetingManagement.Application.Services
                 throw new UserNotFoundException();
             }
 
+            
             user.FirstName = updateUser.FirstName;
             user.LastName = updateUser.LastName;
             user.JobTitle = updateUser.JobTitle;
 
+            if (updateUser.TeamId == null)
+            {
+                user.TeamId = null;
+                user.Role = RoleType.NoTeam;
+            }
+            else if (user.TeamId.ToString() != updateUser.TeamId)
+            {
+                try
+                {
+                    var team = _teamRepository.GetAsync(updateUser.TeamId)
+                        ?? throw new TeamNotFoundException();
+                }
+                catch
+                {
+                    throw new TeamNotFoundException();
+                }
+                user.TeamId = new Guid(updateUser.TeamId);
+                user.Role = RoleType.TeamMember;
+            }
+            
             user.LastModified = DateTime.UtcNow;
 
             await _userRepository.UpdateAsync(user);

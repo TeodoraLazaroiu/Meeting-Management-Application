@@ -42,7 +42,7 @@ namespace MeetingManagement.WebApp.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                var user = await _userService.GetUserEntity(userId);
+                var user = await _userService.GetUserInfo(userId);
                 return Ok(user);
 
             }

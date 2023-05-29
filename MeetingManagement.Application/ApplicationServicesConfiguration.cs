@@ -28,6 +28,7 @@ namespace MeetingManagement.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IResponseService, ResponseService>();
 
             services.AddHostedService<ReminderService>();
 

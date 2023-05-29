@@ -3,6 +3,7 @@
     public class CreateTeamDTO
     {
         public string TeamName { get; set; } = null!;
-        public (int, int) WorkingHours { get; set; }
+        public int StartWorkingHour { get; set; }
+        public int EndWorkingHour { get; set; }
     }
 }

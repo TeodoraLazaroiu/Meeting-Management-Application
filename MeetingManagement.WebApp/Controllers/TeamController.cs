@@ -60,7 +60,6 @@ namespace MeetingManagement.WebApp.Controllers
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
                 var teamEntity = await _teamService.CreateTeam(userId, teamDetails);
-                await _teamService.JoinTeam(userId, teamEntity.AccessCode);
                 return CreatedAtAction(nameof(GetTeam), new {id = teamEntity.Id }, teamEntity.AccessCode);
 
             }
@@ -92,14 +91,8 @@ namespace MeetingManagement.WebApp.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
-                var userRole = User.FindFirstValue(ClaimConstants.UserRole);
-                if (userRole == RoleType.TeamAdmin.ToString())
-                {
-                    await _teamService.DeleteTeam(userId);
-                    return Ok();
-                }
-                else return Forbid();
-
+                await _teamService.DeleteTeam(userId);
+                return Ok();
             }
             catch (Exception)
             {

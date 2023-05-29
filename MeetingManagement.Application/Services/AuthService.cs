@@ -75,8 +75,8 @@ namespace MeetingManagement.Application.Services
 
     public static class ClaimConstants
     {
-        public const string UserIdClaim = "";
-        public const string UserEmailClaim = "";
-        public const string UserRole = "";
+        public const string UserIdClaim = "UserIdClaim";
+        public const string UserEmailClaim = "UserEmailClaim";
+        public const string UserRole = "UserRole";
     }
 }

@@ -3,7 +3,8 @@
 namespace MeetingManagement.Application.DTOs.Event
 {
 	public class EventOccurenceDTO
-    { 
+    {
+        public string Id { get; set; }
         public string EventTitle { get; set; } = null!;
         public string EventDescription { get; set; } = null!;
         public List<Guid> Attendes { get; set; } = null!;
@@ -13,6 +14,7 @@ namespace MeetingManagement.Application.DTOs.Event
 
         public EventOccurenceDTO(EventEntity eventEntity, DateTime dateTime)
         {
+            Id = eventEntity.Id.ToString();
             EventTitle = eventEntity.EventTitle;
             EventDescription = eventEntity.EventDescription;
             Attendes = eventEntity.Attendes;

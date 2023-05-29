@@ -10,5 +10,6 @@ namespace MeetingManagement.Application.DTOs.User
         [Required]
         public string LastName { get; set; } = null!;
         public string? JobTitle { get; set; }
+        public string? TeamId { get; set; }
     }
 }

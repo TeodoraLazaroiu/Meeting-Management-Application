@@ -51,7 +51,9 @@ namespace MeetingManagement.Application.Services
                 Id = team.Id,
                 TeamName = team.TeamName,
                 AccessCode = team.AccessCode,
-                CreatedBy = team.CreatedBy
+                CreatedBy = team.CreatedBy,
+                StartWorkingHour = team.StartWorkingHour,
+                EndWorkingHour = team.EndWorkingHour
             };
 
             teamDetails.TeamMembers = await GetTeamMembers(teamId);
@@ -78,7 +80,8 @@ namespace MeetingManagement.Application.Services
             newTeam.TeamName = teamDetails.TeamName;
             newTeam.CreatedBy = new Guid(userId);
             newTeam.AccessCode = GenerateTeamAccessCode();
-            newTeam.WorkingHours = teamDetails.WorkingHours;
+            newTeam.StartWorkingHour = teamDetails.StartWorkingHour;
+            newTeam.EndWorkingHour = teamDetails.EndWorkingHour;
 
             newTeam.CreatedDate = DateTime.UtcNow;
             newTeam.LastModified = DateTime.UtcNow;
@@ -90,6 +93,7 @@ namespace MeetingManagement.Application.Services
             var user = await _userService.GetUserEntity(userId);
             user.TeamId = newTeam.Id;
             user.Role = RoleType.TeamAdmin;
+            await _userRepository.UpdateAsync(user);
 
             return newTeam;
         }
@@ -126,6 +130,7 @@ namespace MeetingManagement.Application.Services
             }
             else await _teamRepository.DeleteAsync(team.Id.ToString());
 
+            user.Role = RoleType.NoTeam;
             user.TeamId = null;
             await _userRepository.UpdateAsync(user);
         }
@@ -138,6 +143,7 @@ namespace MeetingManagement.Application.Services
 
             code = code.Replace("=", "");
             code = code.Replace("+", "");
+            code = code.Replace("/", "");
 
             return code;
         }

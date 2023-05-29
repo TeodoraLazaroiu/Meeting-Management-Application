@@ -1,5 +1,4 @@
-﻿using System;
-using MeetingManagement.Application.DTOs.Event;
+﻿using MeetingManagement.Application.DTOs.Event;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Common;
@@ -12,13 +11,15 @@ namespace MeetingManagement.Application.Services
 	{
         private IEventRepository _eventRepository;
         private IRecurringPatternRepository _recurringPatternRepository;
+        private IResponseRepository _responseRepository;
         private ITeamService _teamService;
 
         public EventService(IEventRepository eventRepository, IRecurringPatternRepository
-            recurringPatternRepository, ITeamService teamService)
+            recurringPatternRepository, IResponseRepository responseRepository, ITeamService teamService)
         {
             _eventRepository = eventRepository;
             _recurringPatternRepository = recurringPatternRepository;
+            _responseRepository = responseRepository;
             _teamService = teamService;
         }
 
@@ -31,8 +32,8 @@ namespace MeetingManagement.Application.Services
             eventEntity.LastModified = DateTime.UtcNow;
             eventEntity.EventTitle = eventDetails.EventTitle;
 			eventEntity.EventDescription = eventDetails.EventDescription;
-            eventEntity.Attendes = eventDetails.Attendes;
-            eventEntity.Attendes.Add(new Guid(userId));
+            eventEntity.Attendes = eventDetails.Attendes.Select(x => new Guid(x)).ToList();
+            if (!eventDetails.Attendes.Contains(userId)) eventEntity.Attendes.Add(new Guid(userId));
 
             try
             {
@@ -55,6 +56,7 @@ namespace MeetingManagement.Application.Services
                 throw new EventValidationException("Invalid end time format. Should be hh:mm");
             }
 
+            // datetimes are saved with -3 hours: 1.06.2023 00:00 -> 31.05.2023 21:00
             try
             {
                 var yearMonthDay = eventDetails.StartDate.Split("/").Select(Int32.Parse).ToList();
@@ -112,6 +114,14 @@ namespace MeetingManagement.Application.Services
             }
 
             await _eventRepository.CreateAsync(eventEntity);
+
+            foreach (var attendee in eventEntity.Attendes)
+            {
+                var response = new ResponseEntity();
+                response.EventId = eventEntity.Id;
+                response.UserId = attendee;
+                await _responseRepository.CreateAsync(response);
+            }
         }
 
         public async Task<List<EventOccurenceDTO>> GetEventsForUser(string userId, int year = 0, int month = 0, int day = 0)
@@ -129,6 +139,20 @@ namespace MeetingManagement.Application.Services
 
             var eventOccurences = await GetEventsOccurences(events, year, month, day);
             return eventOccurences;
+        }
+
+        public async Task DeleteEvent(string userId, string eventId)
+        {
+            var eventEntity = await _eventRepository.GetAsync(eventId)
+                ?? throw new EventNotFoundException();
+            
+            if (eventEntity.CreatedBy.ToString() != userId)
+            {
+                throw new EventDeletionException("You do not have rights to delete this event");
+            }
+
+            await _eventRepository.DeleteAsync(eventId);
+            if (eventEntity.IsRecurring) { await _recurringPatternRepository.DeleteAsync(eventId); }
         }
 
         public async Task<List<EventIntervalsDTO>> GenerateEventIntervals(string userId, EventPlanningDTO eventPlan)
@@ -154,11 +178,12 @@ namespace MeetingManagement.Application.Services
             var eventOccurencesForDate = await GetEventsOccurences(eventsForDate,
                     selectedDate.Year, selectedDate.Month, selectedDate.Day);
 
-            // to do: get working hours for team
-            var workingHours = (8, 18);
+            var teamDetails = await _teamService.GetTeamByUserId(userId);
+            var start = teamDetails.StartWorkingHour;
+            var end = teamDetails.EndWorkingHour;
             var intervals = new List<(int, int)>();
 
-            for (int i = workingHours.Item1; i < workingHours.Item2; i++)
+            for (int i = start; i < end; i++)
             {
                 intervals.Add((i, i + 1));
             }

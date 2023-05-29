@@ -7,6 +7,7 @@ namespace MeetingManagement.Core.Entities
         public string TeamName { get; set; } = null!;
         public string AccessCode { get; set; } = null!;
         public Guid CreatedBy { get; set; }
-        public (int, int) WorkingHours { get; set; }
+        public int StartWorkingHour { get; set; }
+        public int EndWorkingHour { get; set; }
     }
 }

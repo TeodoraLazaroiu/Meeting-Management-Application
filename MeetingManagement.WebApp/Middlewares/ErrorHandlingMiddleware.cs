@@ -49,12 +49,24 @@ namespace MeetingManagement.WebApp.Middlewares
                     errorResponse = "The team was not found";
                     break;
                 case TeamDeletionException:
-                    context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse = exception.Message;
                     break;
                 case EventValidationException:
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse = exception.Message;
+                    break;
+                case EventNotFoundException:
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorResponse = "The event was not found";
+                    break;
+                case EventDeletionException:
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse = exception.Message;
+                    break;
+                case ResponseNotFoundException:
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorResponse = "The response was not found";
                     break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

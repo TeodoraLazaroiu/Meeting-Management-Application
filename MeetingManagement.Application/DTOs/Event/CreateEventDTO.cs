@@ -6,7 +6,7 @@ namespace MeetingManagement.Application.DTOs.Event
 	{
         public string EventTitle { get; set; } = null!;
         public string EventDescription { get; set; } = null!;
-        public List<Guid> Attendes { get; set; } = null!;
+        public List<string> Attendes { get; set; } = null!;
         public string StartTime { get; set; } = null!;
         public string EndTime { get; set; } = null!;
         public bool IsRecurring { get; set; }

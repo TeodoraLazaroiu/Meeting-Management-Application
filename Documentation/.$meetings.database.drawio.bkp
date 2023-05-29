@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2023-05-28T17:23:23.217Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="3QB6LpFbK1TwV9S4lT-S" version="21.2.8" type="device">
+<mxfile host="Electron" modified="2023-05-28T17:24:04.372Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="ZLxnPRsLsqq4dRS4YKum" version="21.2.8" type="device">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
-    <mxGraphModel dx="1475" dy="733" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+    <mxGraphModel dx="814" dy="404" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -101,7 +101,7 @@
         </mxCell>
         <object label="TEAM" teamId="teamId&#xa;teamId&#xa;" placeholders="1" id="lhX8aBAA-CN6_TQrvfnU-23">
           <mxCell style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;connectable=1;" parent="1" vertex="1">
-            <mxGeometry x="80" y="480" width="200" height="210" as="geometry">
+            <mxGeometry x="80" y="480" width="200" height="240" as="geometry">
               <mxRectangle x="440" y="80" width="70" height="30" as="alternateBounds" />
             </mxGeometry>
           </mxCell>
@@ -366,21 +366,21 @@
         </object>
         <object label="createdDate" teamId="" id="ROYj8HqKsCZeWACCtqD5-50">
           <mxCell style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="1" vertex="1">
-            <mxGeometry x="110" y="630" width="170" height="30" as="geometry">
+            <mxGeometry x="110" y="660" width="170" height="30" as="geometry">
               <mxRectangle width="170" height="30" as="alternateBounds" />
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="lastModified" teamId="" id="ROYj8HqKsCZeWACCtqD5-51">
+        <object label="workingHours" teamId="" id="ROYj8HqKsCZeWACCtqD5-51">
           <mxCell style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" parent="1" vertex="1">
-            <mxGeometry x="110" y="660" width="170" height="30" as="geometry">
+            <mxGeometry x="110" y="630" width="170" height="30" as="geometry">
               <mxRectangle width="170" height="30" as="alternateBounds" />
             </mxGeometry>
           </mxCell>
         </object>
         <mxCell id="ROYj8HqKsCZeWACCtqD5-52" value="" style="endArrow=none;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="110" y="690" as="sourcePoint" />
+            <mxPoint x="110" y="720" as="sourcePoint" />
             <mxPoint x="110" y="630" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -647,6 +647,13 @@
         <object label="role" teamId="" id="cZBWC3ubqyiQqlboVfXQ-1">
           <mxCell style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" vertex="1" parent="1">
             <mxGeometry x="110" y="350" width="170" height="30" as="geometry">
+              <mxRectangle width="170" height="30" as="alternateBounds" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="lastModified" teamId="" id="cZBWC3ubqyiQqlboVfXQ-2">
+          <mxCell style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" vertex="1" parent="1">
+            <mxGeometry x="110" y="690" width="170" height="30" as="geometry">
               <mxRectangle width="170" height="30" as="alternateBounds" />
             </mxGeometry>
           </mxCell>

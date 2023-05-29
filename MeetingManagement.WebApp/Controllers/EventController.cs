@@ -19,7 +19,7 @@ namespace MeetingManagement.WebApp.Controllers
             _eventService = eventService;
         }
 
-        [HttpGet("{year?}/{month?}/{day?}")]
+        [HttpGet]
         public async Task<IActionResult> GetUserEvents(int year = 0, int month = 0, int day = 0)
         {
             try
@@ -35,7 +35,7 @@ namespace MeetingManagement.WebApp.Controllers
             }
         }
 
-        [HttpGet("team/{year?}/{month?}/{day?}")]
+        [HttpGet("team")]
         public async Task<IActionResult> GetTeamEvents(int year = 0, int month = 0, int day = 0)
         {
             try
@@ -76,6 +76,21 @@ namespace MeetingManagement.WebApp.Controllers
                 await _eventService.CreateEvent(userId, eventDetails);
                 return Ok();
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteEvent(string eventId)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                await _eventService.DeleteEvent(userId, eventId);
+                return Ok();
             }
             catch (Exception)
             {
