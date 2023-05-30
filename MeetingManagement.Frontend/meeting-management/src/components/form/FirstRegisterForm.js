@@ -15,11 +15,13 @@ export function FirstRegisterForm ({firstCallback}) {
 
         var pass = document.getElementById('passwordInput')
         var confirm = document.getElementById('confirmPasswordInput')
+        var passwordIsValid = true
 
         if (pass.value !== confirm.value)
         {
             pass.classList.add('is-invalid')
             confirm.classList.add('is-invalid')
+            passwordIsValid = false
         }
         else
         {
@@ -27,7 +29,7 @@ export function FirstRegisterForm ({firstCallback}) {
             confirm.classList.remove('is-invalid')
         }
 
-        if (form.checkValidity())
+        if (form.checkValidity() && passwordIsValid)
         {
             var data = {
                 email: email,

@@ -5,14 +5,7 @@ export function SecondRegisterForm ({secondCallback}) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [roleTitle, setRoleTitle] = useState('');
-    const [nextForm] = useState(2);
-
-    var data = {
-      firstName: firstName,
-      lastName: lastName,
-      roleTitle: roleTitle,
-      nextForm: nextForm
-    }
+    const [nextForm] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,12 +15,25 @@ export function SecondRegisterForm ({secondCallback}) {
 
         if (form.checkValidity())
         {
+          console.log(firstName)
+          var data = {
+            firstName: firstName,
+            lastName: lastName,
+            roleTitle: roleTitle,
+            nextForm: nextForm
+          }
           secondCallback(data)
         }
     }
 
     const handleBack = () => {
-      data.nextForm = 1
+      var data = {
+        firstName: '',
+        lastName: '',
+        roleTitle: '',
+        nextForm: 1
+      }
+      
       secondCallback(data)
     }
 

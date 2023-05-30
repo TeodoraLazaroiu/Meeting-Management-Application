@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
@@ -34,31 +34,36 @@ export const Register = () => {
         setFormNumber(data.nextForm)
     }
     
-    const secondCallback = data => {
+    const secondCallback = (data) => {
         setFirstName(data.firstName)
         setLastName(data.lastName)
         setRoleTitle(data.roleTitle)
         setFormNumber(data.nextForm)
-
-        if (data.nextForm === 2) registerUser()
     }
 
+    useEffect(() => {
+      if (formNumber === null) {
+        registerUser();
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formNumber])
+
     const registerUser = async () => {
-        await client.post('/user', {
-            "email": email,
-            "password": password,
-            "firstName": firstName,
-            "lastName": lastName,
-            "roleTitle": roleTitle
-          })
-          .then((response) => {
-            console.log(response)
-            toast.success('Account created successfully')
-          })
-          .catch((error) => {
-            console.log(error.response.data)
-            toast.error(error.response.data)
-          });
+      await client.post('/user', {
+          "email": email,
+          "password": password,
+          "firstName": firstName,
+          "lastName": lastName,
+          "roleTitle": roleTitle
+        })
+        .then((response) => {
+          console.log(response)
+          toast.success('Account created successfully')
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+          toast.error(error.response.data)
+        });
     }
 
     return (
@@ -72,6 +77,7 @@ export const Register = () => {
         <div className="card-body py-5 px-md-5">
             {formNumber === 1 && <FirstRegisterForm firstCallback={firstCallback}/>}
             {formNumber === 2 && <SecondRegisterForm secondCallback={secondCallback}/>}
+            {formNumber === null && <SecondRegisterForm secondCallback={secondCallback}/>}
         </div>
         </div>
     </div>
