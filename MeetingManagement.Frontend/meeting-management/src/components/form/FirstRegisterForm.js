@@ -68,7 +68,7 @@ export function FirstRegisterForm ({firstCallback}) {
               </div>
 
               <div className="row container-fluid">
-              <button type="submit" className="mx-2 col-sm-3 btn btn-primary btn-block">
+              <button type="submit" className="col-sm-3 btn btn-primary btn-block" style={{backgroundColor: "#3474b0"}}>
                 Next
               </button>
               <span className="col-sm-8 pt-2">Already have an account? <Link to="/login">Sign in</Link></span>

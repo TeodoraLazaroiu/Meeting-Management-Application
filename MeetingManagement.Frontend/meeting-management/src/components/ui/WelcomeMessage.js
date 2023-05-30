@@ -5,7 +5,7 @@ export const WelcomeMessage = () => {
         <div className="col-lg-6">
             <h1 className="my-5 display-3 fw-bold">
             Meeting<br />
-            <span className="text-primary">Management</span>
+            <span style={{color: "#3474b0"}}>Management</span>
             </h1>
             <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />

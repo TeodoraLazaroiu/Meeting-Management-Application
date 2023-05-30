@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -14,6 +14,8 @@ export const Login = () => {
       withCredentials: true,
       baseURL: apiUrl
     })
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +36,8 @@ export const Login = () => {
               toast.error(error.response.data)
             });
         }
-      
+
+        navigate('/login')
     }
 
     const styles = {
@@ -66,7 +69,7 @@ export const Login = () => {
               </div>
 
               <div className="row container-fluid">
-              <button type="submit" className="col-sm-3 btn btn-primary btn-block">
+              <button type="submit" className="col-sm-3 btn btn-primary btn-block" style={{backgroundColor: "#3474b0"}}>
                 Sign in
               </button>
               <span className="col-sm-9 px-3 pt-2">Don't have an account? <Link to="/register">Sign up</Link></span>
