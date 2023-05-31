@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import axios from 'axios';
 import format from "date-fns/format";
 import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import AuthContext from '../../utils/AuthContext';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -53,17 +55,28 @@ export const CalendarComponent = () => {
       baseURL: apiUrl
     })
 
+    const { authenticated, setAuthenticated } = useContext(AuthContext);
+
+    client.interceptors.response.use(function (response) {
+        return response;
+    }, function (error) {
+        if (!error.response) {
+            setAuthenticated(false)
+        }
+    });
+
     useEffect((year, month) => {
         const getEvents = async () => {
-            console.log('/event?year=' + year + '&month=' + month)
-            await client.get('/event?year=' + year + '&month=' + month)
-              .then((response) => {
+        await client.get('/event?year=' + year + '&month=' + month)
+            .then((response) => {
                 const data = response.data;
                 setJsonEvents(data)
-              });
+            })
+            .catch((error) => {
+                console.log(error)
+            })
           }
         var year = date.getFullYear()
-        console.log(year)
         var month = date.getMonth() + 1
         getEvents(year, month)
     }, [date]);

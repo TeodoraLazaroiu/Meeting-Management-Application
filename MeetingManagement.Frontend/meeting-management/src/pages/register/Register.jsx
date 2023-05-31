@@ -1,10 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
 import { FirstRegisterForm } from '../../components/form/FirstRegisterForm'
 import { SecondRegisterForm } from '../../components/form/SecondRegisterForm'
+import AuthContext from '../../utils/AuthContext';
 
 export const Register = () => {
     const [email, setEmail] = useState('');
@@ -13,6 +15,7 @@ export const Register = () => {
     const [lastName, setLastName] = useState('');
     const [roleTitle, setRoleTitle] = useState('');
     const [formNumber, setFormNumber] = useState(1);
+    const [registerSuccess, setRegisterSuccess] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -45,7 +48,6 @@ export const Register = () => {
       if (formNumber === null) {
         registerUser();
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formNumber])
 
     const registerUser = async () => {
@@ -56,12 +58,34 @@ export const Register = () => {
           "lastName": lastName,
           "roleTitle": roleTitle
         })
-        .then((response) => {
-          console.log(response)
+        .then(() => {
+          setRegisterSuccess(true)
           toast.success('Account created successfully')
         })
         .catch((error) => {
-          console.log(error.response.data)
+          toast.error(error.response.data)
+        });
+    }
+
+    const navigate = useNavigate()
+    const { setAuthenticated } = useContext(AuthContext);
+
+    useEffect(() => {
+      if (registerSuccess) {
+        loginUser()
+      }
+    }, [registerSuccess]);
+
+    const loginUser = async () => {
+      await client.post('/auth/signIn', {
+          "email": email,
+          "password": password
+        })
+        .then(() => {
+          setAuthenticated(true);
+          navigate('/home')
+        })
+        .catch((error) => {
           toast.error(error.response.data)
         });
     }

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
 import axios from 'axios';
+import AuthContext from '../../utils/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,6 +17,8 @@ export const Login = () => {
     })
 
     const navigate = useNavigate();
+    const [isSuccessful, setIsSuccessful] = useState(false);
+    const { setAuthenticated } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,15 +33,20 @@ export const Login = () => {
               "password": password
             })
             .then((response) => {
-              console.log(response)
+              setIsSuccessful(true);
             })
             .catch((error) => {
               toast.error(error.response.data)
             });
         }
-
-        navigate('/login')
     }
+
+    useEffect(() => {
+      if (isSuccessful) {
+        setAuthenticated(true);
+        navigate('/home')
+      }
+    })
 
     const styles = {
       main : {
