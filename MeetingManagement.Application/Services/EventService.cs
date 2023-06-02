@@ -1,4 +1,6 @@
-﻿using MeetingManagement.Application.DTOs.Event;
+﻿using System.ComponentModel;
+using MeetingManagement.Application.DTOs.Event;
+using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Common;
@@ -13,14 +15,16 @@ namespace MeetingManagement.Application.Services
         private IRecurringPatternRepository _recurringPatternRepository;
         private IResponseRepository _responseRepository;
         private ITeamService _teamService;
+        private IUserService _userService;
 
-        public EventService(IEventRepository eventRepository, IRecurringPatternRepository
-            recurringPatternRepository, IResponseRepository responseRepository, ITeamService teamService)
+        public EventService(IEventRepository eventRepository, IRecurringPatternRepository recurringPatternRepository,
+            IResponseRepository responseRepository, ITeamService teamService, IUserService userService)
         {
             _eventRepository = eventRepository;
             _recurringPatternRepository = recurringPatternRepository;
             _responseRepository = responseRepository;
             _teamService = teamService;
+            _userService = userService;
         }
 
 		public async Task CreateEvent(string userId, CreateEventDTO eventDetails)
@@ -124,6 +128,46 @@ namespace MeetingManagement.Application.Services
             }
         }
 
+        private async Task<EventEntity> GetEventEntity(string id)
+        {
+            try
+            {
+                var eventEntity = await _eventRepository.GetAsync(id)
+                    ?? throw new EventNotFoundException();
+                return eventEntity;
+            }
+            catch
+            {
+                throw new EventNotFoundException();
+            }
+        }
+
+        public async Task<EventDetailsDTO> GetEventById(string id)
+        {
+            var eventEntity = await GetEventEntity(id);
+            var eventDetails = new EventDetailsDTO();
+
+            eventDetails.EventTitle = eventEntity.EventTitle;
+            eventDetails.EventDescription = eventEntity.EventDescription;
+            eventDetails.StartTime = eventEntity.StartTime.ToString("hh\\:mm");
+            eventDetails.EndTime = eventEntity.EndTime.ToString("hh\\:mm");
+            eventDetails.StartDate = eventEntity.StartDate.Date.ToString("dddd, dd MMMM yyyy");
+            eventDetails.EndDate = eventEntity.EndDate.Date.ToString("dddd, dd MMMM yyyy");
+            eventDetails.IsRecurring = eventEntity.IsRecurring;
+
+            var attendees = new List<UserInfoDTO>();
+            foreach (var userId in eventEntity.Attendes)
+            {
+                var userInfo = await _userService.GetUserInfo(userId.ToString());
+                attendees.Add(userInfo);
+            }
+            eventDetails.AttendesInfo = attendees;
+
+            eventDetails.CreatedBy = await _userService.GetUserInfo(eventEntity.CreatedBy.ToString());
+
+            return eventDetails;
+        }
+
         public async Task<List<EventOccurenceDTO>> GetEventsForUser(string userId, int year = 0, int month = 0, int day = 0)
         {
             var eventsFromDb = await _eventRepository.GetEventsByUserId(userId);
@@ -143,9 +187,8 @@ namespace MeetingManagement.Application.Services
 
         public async Task DeleteEvent(string userId, string eventId)
         {
-            var eventEntity = await _eventRepository.GetAsync(eventId)
-                ?? throw new EventNotFoundException();
-            
+            var eventEntity = await GetEventEntity(eventId);
+
             if (eventEntity.CreatedBy.ToString() != userId)
             {
                 throw new EventDeletionException("You do not have rights to delete this event");
@@ -283,7 +326,7 @@ namespace MeetingManagement.Application.Services
                                 eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
                                 var separation = recurrence.SeparationCount ?? throw new
                                     EventValidationException("Weekly recurrence must provide SeparationCount parameter");
-                                currentDate.AddDays(7 * (separation + 1));
+                                currentDate = currentDate.AddDays(7 * (separation + 1));
                             }
                         }
                         else
@@ -313,7 +356,7 @@ namespace MeetingManagement.Application.Services
                             eventsOccurences.Add(new EventOccurenceDTO(eventEntry, currentDate));
                             var separation = recurrence.SeparationCount ?? throw new
                                 EventValidationException("Monthly recurrence must provide SeparationCount parameter");
-                            currentDate.AddMonths(separation + 1);
+                            currentDate = currentDate.AddMonths(separation + 1);
                         }
                     }
                 }

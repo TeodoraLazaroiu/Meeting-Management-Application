@@ -10,7 +10,7 @@ export const WelcomeMessage = () => {
             <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />
             Eveniet, itaque accusantium odio, soluta, corrupti aliquam<br />
-            quibusdam tempora at cupiditate quis eum maiores libero<br />
+            quibusdam tempora at cupiditate qui eum maiores libero<br />
             veritatis? Dicta facilis sint aliquid ipsum atque?<br />
             </p>
         </div>

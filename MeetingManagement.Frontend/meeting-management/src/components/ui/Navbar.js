@@ -33,7 +33,7 @@ export const Navbar = () => {
         </Link>
         <div className="text-lg-start navbar-nav">
             <Link className="nav-item nav-link active" to="/home">Home</Link>
-            <Link className="nav-item nav-link" to="">Team</Link>
+            <Link className="nav-item nav-link" to="/team">Team</Link>
             <Link onClick={handleLogout} className="nav-item nav-link" to="/login">Logout</Link>
         </div>
     </nav>

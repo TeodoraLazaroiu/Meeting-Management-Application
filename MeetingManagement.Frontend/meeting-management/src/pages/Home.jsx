@@ -1,3 +1,4 @@
+import { Navbar } from '../components/ui/Navbar';
 import React, { useCallback, useContext } from 'react';
 import axios from 'axios';
 import format from "date-fns/format";
@@ -5,12 +6,11 @@ import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom'
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import AuthContext from '../../utils/AuthContext';
+import AuthContext from '../utils/AuthContext';
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { EventCard } from '../components/ui/EventCard';
 
 const locales = {
     "en-GB": require('date-fns/locale/en-GB')
@@ -24,30 +24,13 @@ const localizer = dateFnsLocalizer({
     locales
 })
 
-const eventsValues = [
-    {
-        title: 'Daily',
-        start: new Date(2023, 4, 15, 10),
-        end: new Date(2023, 4, 15, 11),
-        allDay: false
-    },
-    {
-        title: 'Meet',
-        start: new Date(2023, 4, 20),
-        end: new Date(2023, 4, 20),
-        allDay: false
-    },
-    {
-        title: 'Demo',
-        start: new Date(2023, 4, 7),
-        end: new Date(2023, 4, 10)
-    }
-]
-
-export const CalendarComponent = () => {
+export const Home = () => {
     const [jsonEvents, setJsonEvents] = useState([]);
     const [events, setEvents] = useState([]);
     const [date, setDate] = useState(new Date());
+    const [selectedEvent, setSelectedEvent] = useState(false);
+    const [selectedEventDate, setSelectedEventDate] = useState('');
+    const [eventId, setEventId] = useState('');
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -55,7 +38,7 @@ export const CalendarComponent = () => {
       baseURL: apiUrl
     })
 
-    const { authenticated, setAuthenticated } = useContext(AuthContext);
+    const { setAuthenticated } = useContext(AuthContext);
 
     client.interceptors.response.use(function (response) {
         return response;
@@ -88,14 +71,33 @@ export const CalendarComponent = () => {
             return new Date(dateOnly[2], dateOnly[1] - 1, dateOnly[0], timeOnly[0], timeOnly[1])
         }
         
-        var events = jsonEvents.map(e => ({ title: e.eventTitle, start: mapDateAndTime(e.startTime, e.date), end: mapDateAndTime(e.endTime, e.date)}))
+        var events = jsonEvents.map(e => ({ id: e.id, title: e.eventTitle, start: mapDateAndTime(e.startTime, e.date), end: mapDateAndTime(e.endTime, e.date)}))
         setEvents(events)
 
     }, [jsonEvents]);
 
+    const onSelectEvent = useCallback((callEvent) => {
+        setSelectedEvent(true)
+        setEventId(callEvent.id)
+        setSelectedEventDate(callEvent.start)
+      }, [])
+
     const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
 
     return (
-        <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} startAccessor="start" endAccessor="end" style={{width: 700, height: 500, margin: "50px"}}/>
+        <div>
+            <Navbar/>
+        <div className="container-fluid">
+        <div className="row">
+          <div className="col">
+            <div className="mx-5 text-start text-secondary" style={{marginTop: 25, marginBottom: -25}}><h3><b>Your calendar</b></h3></div>
+          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}}/>
+          </div>
+          <div className="col mx-2 my-5">
+          {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}
+          </div>
+        </div>
+        </div>
+        </div>
     )
 }

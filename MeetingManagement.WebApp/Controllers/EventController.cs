@@ -19,6 +19,22 @@ namespace MeetingManagement.WebApp.Controllers
             _eventService = eventService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEventById(string id)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                var eventDetails = await _eventService.GetEventById(id);
+                return Ok(eventDetails);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserEvents(int year = 0, int month = 0, int day = 0)
         {

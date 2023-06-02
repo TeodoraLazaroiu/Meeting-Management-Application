@@ -16,6 +16,11 @@ namespace MeetingManagement.Application.DTOs.Response
             SendReminder = responseEntity.SendReminder;
             ReminderTime = responseEntity.ReminderTime;
         }
+
+        public UserResponseDTO()
+        {
+
+        }
     }
 }
 

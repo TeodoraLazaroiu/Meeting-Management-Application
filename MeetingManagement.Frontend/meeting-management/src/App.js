@@ -1,11 +1,12 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { Login } from './pages/login/Login'
-import { Register } from './pages/register/Register'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
 import { ToastContainer } from 'react-toastify';
-import { Home } from './pages/calendar/Home';
+import { Home } from './pages/Home';
 import AuthContext from './utils/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Team } from './pages/Team';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -40,6 +41,7 @@ function App() {
           <Route path='/login' element={<Login/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/home' element={<Home/>}/>
+          <Route path='/team' element={<Team/>}/>
         </Routes>
       </AuthContext.Provider>
     </div>

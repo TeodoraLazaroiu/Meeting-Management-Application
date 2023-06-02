@@ -17,6 +17,7 @@ namespace MeetingManagement.Application.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(10000, stoppingToken);
+
                 await SomeRecurringTask();
             }
         }

@@ -3,10 +3,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { WelcomeMessage } from '../../components/ui/WelcomeMessage'
-import { FirstRegisterForm } from '../../components/form/FirstRegisterForm'
-import { SecondRegisterForm } from '../../components/form/SecondRegisterForm'
-import AuthContext from '../../utils/AuthContext';
+import { WelcomeMessage } from '../components/ui/WelcomeMessage'
+import { FirstRegisterForm } from '../components/form/FirstRegisterForm'
+import { SecondRegisterForm } from '../components/form/SecondRegisterForm'
+import AuthContext from '../utils/AuthContext';
 
 export const Register = () => {
     const [email, setEmail] = useState('');
