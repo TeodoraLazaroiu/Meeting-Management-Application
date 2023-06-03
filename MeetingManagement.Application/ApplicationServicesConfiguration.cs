@@ -31,8 +31,9 @@ namespace MeetingManagement.Application
             services.AddScoped<IResponseService, ResponseService>();
 
             services.AddHostedService<ReminderService>();
-
             services.AddHttpContextAccessor();
+
+            services.AddTransient<IMailService, MailService>();
 
             return services;
         }

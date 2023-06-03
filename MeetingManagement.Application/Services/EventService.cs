@@ -16,15 +16,17 @@ namespace MeetingManagement.Application.Services
         private IResponseRepository _responseRepository;
         private ITeamService _teamService;
         private IUserService _userService;
+        private IResponseService _responseService;
 
         public EventService(IEventRepository eventRepository, IRecurringPatternRepository recurringPatternRepository,
-            IResponseRepository responseRepository, ITeamService teamService, IUserService userService)
+            IResponseRepository responseRepository, ITeamService teamService, IUserService userService, IResponseService responseService)
         {
             _eventRepository = eventRepository;
             _recurringPatternRepository = recurringPatternRepository;
             _responseRepository = responseRepository;
             _teamService = teamService;
             _userService = userService;
+            _responseService = responseService;
         }
 
 		public async Task CreateEvent(string userId, CreateEventDTO eventDetails)
@@ -65,7 +67,7 @@ namespace MeetingManagement.Application.Services
             {
                 var yearMonthDay = eventDetails.StartDate.Split("/").Select(Int32.Parse).ToList();
                 var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
-                eventEntity.StartDate = dateOnly.ToDateTime(TimeOnly.MinValue);
+                eventEntity.StartDate = dateOnly.ToDateTime(TimeOnly.MaxValue);
             }
             catch
             {
@@ -76,7 +78,7 @@ namespace MeetingManagement.Application.Services
             {
                 var yearMonthDay = eventDetails.EndDate.Split("/").Select(Int32.Parse).ToList();
                 var dateOnly = new DateOnly(yearMonthDay[2], yearMonthDay[1], yearMonthDay[0]);
-                eventEntity.EndDate = dateOnly.ToDateTime(TimeOnly.MinValue);
+                eventEntity.EndDate = dateOnly.ToDateTime(TimeOnly.MaxValue);
             }
             catch
             {
@@ -86,7 +88,7 @@ namespace MeetingManagement.Application.Services
             eventEntity.IsRecurring = eventDetails.IsRecurring;
             eventEntity.CreatedBy = new Guid(userId);
 
-            if (eventEntity.StartDate > eventEntity.EndDate || eventEntity.StartDate < DateTime.Now)
+            if (eventEntity.StartDate > eventEntity.EndDate)
             {
                 throw new EventValidationException("Invalid timeline for the date of event");
             }
@@ -168,6 +170,13 @@ namespace MeetingManagement.Application.Services
             return eventDetails;
         }
 
+        public async Task<List<EventOccurenceDTO>> GetEvents(int year = 0, int month = 0, int day = 0)
+        {
+            var eventsFromDb = (await _eventRepository.GetAllAsync()).ToList();
+            var eventOccurences = await GetEventsOccurences(eventsFromDb, year, month, day);
+            return eventOccurences;
+        }
+
         public async Task<List<EventOccurenceDTO>> GetEventsForUser(string userId, int year = 0, int month = 0, int day = 0)
         {
             var eventsFromDb = await _eventRepository.GetEventsByUserId(userId);
@@ -195,6 +204,7 @@ namespace MeetingManagement.Application.Services
             }
 
             await _eventRepository.DeleteAsync(eventId);
+            await _responseRepository.DeleteResponsesByEvent(eventId);
             if (eventEntity.IsRecurring) { await _recurringPatternRepository.DeleteAsync(eventId); }
         }
 

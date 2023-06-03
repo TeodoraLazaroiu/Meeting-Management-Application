@@ -6,6 +6,7 @@ namespace MeetingManagement.Application.Interfaces
 	{
         Task UpdateResponse(string userId, UserResponseDTO userResponse);
         Task<List<ResponseDetailsDTO>> GetUserResponses(string userId);
+        Task<List<ResponseDetailsDTO>> GetResponsesByEvent(string eventId);
     }
 }
 

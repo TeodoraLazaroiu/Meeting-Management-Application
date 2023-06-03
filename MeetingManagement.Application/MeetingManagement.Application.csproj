@@ -10,6 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="MailKit" Version="4.0.0" />
+    <PackageReference Include="MimeKit" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +21,11 @@
   <ItemGroup>
     <None Remove="DTOs\Event\" />
     <None Remove="DTOs\Response\" />
+    <None Remove="DTOs\Mail\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTOs\Event\" />
     <Folder Include="DTOs\Response\" />
+    <Folder Include="DTOs\Mail\" />
   </ItemGroup>
 </Project>

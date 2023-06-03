@@ -11,11 +11,13 @@ namespace MeetingManagement.Application.Services
 	{
 		private readonly IResponseRepository _responseRepository;
 		private readonly IEventRepository _eventRepository;
+		private readonly IUserRepository _userRepository;
 
-		public ResponseService(IResponseRepository responseRepository, IEventRepository eventRepository)
+		public ResponseService(IResponseRepository responseRepository, IEventRepository eventRepository, IUserRepository userRepository)
 		{
 			_responseRepository = responseRepository;
 			_eventRepository = eventRepository;
+			_userRepository = userRepository;
 		}
 
 		private async Task<ResponseEntity> GetResponseEntity(string userId, string eventId)
@@ -32,7 +34,25 @@ namespace MeetingManagement.Application.Services
             }
         }
 
-		public async Task<List<ResponseDetailsDTO>> GetUserResponses(string userId)
+        public async Task<List<ResponseDetailsDTO>> GetResponsesByEvent(string eventId)
+        {
+            var responses = await _responseRepository.GetResponsesByEvent(eventId);
+            var responsesDetails = new List<ResponseDetailsDTO>();
+
+            foreach (var response in responses)
+            {
+                var eventEntity = await _eventRepository.GetAsync(response.EventId.ToString())
+					?? throw new EventNotFoundException();
+				var userEntity = await _userRepository.GetAsync(response.UserId.ToString())
+					?? throw new UserNotFoundException();
+                if (eventEntity == null) throw new EventNotFoundException();
+                responsesDetails.Add(new ResponseDetailsDTO(response, eventEntity, userEntity.Id.ToString(), userEntity.Email));
+            }
+
+            return responsesDetails;
+        }
+
+        public async Task<List<ResponseDetailsDTO>> GetUserResponses(string userId)
 		{
 			var responses = await _responseRepository.GetResponsesByUser(userId);
 			var responsesDetails = new List<ResponseDetailsDTO>();
@@ -41,7 +61,7 @@ namespace MeetingManagement.Application.Services
 			{
 				var eventEntity = await _eventRepository.GetAsync(response.EventId.ToString());
 				if (eventEntity == null) throw new EventNotFoundException();
-				responsesDetails.Add(new ResponseDetailsDTO(response, eventEntity));
+				responsesDetails.Add(new ResponseDetailsDTO(response, eventEntity, userId));
             }
 			
 			return responsesDetails;

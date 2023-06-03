@@ -1,4 +1,5 @@
 using MeetingManagement.Application;
+using MeetingManagement.Application.DTOs.Mail;
 using MeetingManagement.Persistance;
 using MeetingManagement.WebApp.Extensions;
 
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistanceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

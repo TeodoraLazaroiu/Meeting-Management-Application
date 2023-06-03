@@ -11,11 +11,13 @@ namespace MeetingManagement.Application.DTOs.Response
         public string StartTime { get; set; } = null!;
         public string EndTime { get; set; } = null!;
         public string EventId { get; set; } = null!;
+        public string UserId { get; set; } = null!;
+        public string? UserEmail { get; set; }
         public bool? IsAttending { get; set; }
         public bool? SendReminder { get; set; }
         public int? ReminderTime { get; set; }
 
-        public ResponseDetailsDTO(ResponseEntity response, EventEntity eventEntity)
+        public ResponseDetailsDTO(ResponseEntity response, EventEntity eventEntity, string userId, string? userEmail = null)
         {
             EventTitle = eventEntity.EventTitle;
             StartDate = eventEntity.StartDate.ToString("dd/MM/yyyy");
@@ -23,6 +25,8 @@ namespace MeetingManagement.Application.DTOs.Response
             StartTime = eventEntity.StartTime.ToString();
             EndTime = eventEntity.EndTime.ToString();
             EventId = response.EventId.ToString();
+            UserId = userId;
+            UserEmail = userEmail;
             IsAttending = response.IsAttending;
             SendReminder = response.SendReminder;
             ReminderTime = response.ReminderTime;

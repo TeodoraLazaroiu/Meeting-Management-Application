@@ -1,36 +1,96 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using MeetingManagement.Application.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using MeetingManagement.Application.DTOs.Response;
+using Org.BouncyCastle.Asn1.Ocsp;
+using MeetingManagement.Application.DTOs.Mail;
 
 namespace MeetingManagement.Application.Services
 {
 	public class ReminderService : BackgroundService
     {
         private readonly ILogger<ReminderService> _logger;
+        public IServiceProvider _services { get; }
 
-        public ReminderService(ILogger<ReminderService> logger)
+        public ReminderService(ILogger<ReminderService> logger, IServiceProvider services)
         {
             _logger = logger;
+            _services = services;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(10000, stoppingToken);
+                var now = DateTime.Now;
+                Console.WriteLine(now);
+                await CheckEventsAndReminders();
 
-                await SomeRecurringTask();
+                now = DateTime.Now;
+                var second = DateTime.Now.Second;
+                Console.WriteLine(now);
+                await Task.Delay(60000 - second * 1000, stoppingToken);
             }
         }
 
-        private Task SomeRecurringTask()
+        private async Task CheckEventsAndReminders()
         {
-            if (true)
+            try
             {
-                Console.WriteLine("Executing background task");
-                _logger.LogInformation("Logging in background task");
-            }
+                _logger.LogInformation("Starting background task");
+                using (var scope = _services.CreateScope())
+                {
+                    var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
+                    var responseService = scope.ServiceProvider.GetRequiredService<IResponseService>();
+                    var emailService = scope.ServiceProvider.GetRequiredService<IMailService>();
 
-            return Task.FromResult("Done");
+                    var year = DateTime.Now.Year;
+                    var month = DateTime.Now.Month;
+                    var day = DateTime.Now.Day;
+                    var todayEvents = await eventService.GetEvents(year, month, day);
+
+                    var responses = new List<ResponseDetailsDTO>();
+
+                    foreach(var eventOccurence in todayEvents)
+                    {
+                        var eventResponses = await responseService.GetResponsesByEvent(eventOccurence.Id);
+                        responses.AddRange(eventResponses);
+                    }
+
+                    var reminderResponses = responses.Where(x => x.SendReminder == true).ToList();
+                    foreach(var response in reminderResponses)
+                    {
+                        if (response.ReminderTime == null) continue;
+                        var reminderTime = TimeSpan.Parse(response.StartTime).Subtract(TimeSpan.FromMinutes((double)response.ReminderTime));
+
+                        var now = DateTime.Now;
+
+                        var currentHour = now.Hour;
+                        var currentMinute = now.Minute;
+
+                        var reminderHour = reminderTime.Hours;
+                        var reminderMinute = reminderTime.Minutes;
+
+                        if (reminderHour == currentHour && reminderMinute == currentMinute)
+                        {
+                            _logger.LogInformation("Sending email to: {email}", response.UserEmail);
+                            var request = new MailRequest();
+                            request.Recipient = response.UserEmail ?? "";
+                            request.Subject = $"Reminder for meeting: {response.EventTitle}";
+                            request.Message = $"Your meeting will start in {response.ReminderTime} minutes";
+                            await emailService.SendEmailAsync(request);
+                        }
+                    }
+                    _logger.LogInformation("Ending background task");
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

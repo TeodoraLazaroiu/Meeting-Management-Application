@@ -21,5 +21,17 @@ namespace MeetingManagement.Persistance.Repositories
             var filter = Builders<ResponseEntity>.Filter.Eq(x => x.UserId, new Guid(userId));
             return await _dbCollection.Find(filter).ToListAsync();
         }
+
+        public async Task<List<ResponseEntity>> GetResponsesByEvent(string eventId)
+        {
+            var filter = Builders<ResponseEntity>.Filter.Eq(x => x.EventId, new Guid(eventId));
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task DeleteResponsesByEvent(string eventId)
+        {
+            var filter = Builders<ResponseEntity>.Filter.Eq(x => x.EventId, new Guid(eventId));
+            await _dbCollection.DeleteManyAsync(filter);
+        }
     }
 }

@@ -6,5 +6,7 @@ namespace MeetingManagement.Core.Interfaces
     {
         Task<ResponseEntity?> GetResponseByUserAndEvent(string userId, string eventId);
         Task<List<ResponseEntity>> GetResponsesByUser(string userId);
+        Task<List<ResponseEntity>> GetResponsesByEvent(string eventId);
+        Task DeleteResponsesByEvent(string eventId);
     }
 }
