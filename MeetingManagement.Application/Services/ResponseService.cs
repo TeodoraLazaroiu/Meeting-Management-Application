@@ -73,6 +73,7 @@ namespace MeetingManagement.Application.Services
 			response.IsAttending = userResponse.IsAttending;
 			response.SendReminder = userResponse.SendReminder;
 			response.ReminderTime = userResponse.ReminderTime;
+			response.LastModified = DateTime.UtcNow;
 
 			await _responseRepository.UpdateAsync(response);
 		}

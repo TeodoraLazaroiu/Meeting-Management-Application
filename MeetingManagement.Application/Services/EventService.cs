@@ -62,7 +62,6 @@ namespace MeetingManagement.Application.Services
                 throw new EventValidationException("Invalid end time format. Should be hh:mm");
             }
 
-            // datetimes are saved with -3 hours: 1.06.2023 00:00 -> 31.05.2023 21:00
             try
             {
                 var yearMonthDay = eventDetails.StartDate.Split("/").Select(Int32.Parse).ToList();
@@ -125,6 +124,8 @@ namespace MeetingManagement.Application.Services
                 var response = new ResponseEntity();
                 response.EventId = eventEntity.Id;
                 response.UserId = attendee;
+                response.CreatedDate = DateTime.UtcNow;
+                response.LastModified = DateTime.UtcNow;
                 await _responseRepository.CreateAsync(response);
             }
         }

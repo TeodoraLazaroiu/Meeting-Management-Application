@@ -93,6 +93,7 @@ namespace MeetingManagement.Application.Services
             var user = await _userService.GetUserEntity(userId);
             user.TeamId = newTeam.Id;
             user.TeamRole = RoleType.TeamAdmin;
+            user.LastModified = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user);
 
             return newTeam;
@@ -106,6 +107,7 @@ namespace MeetingManagement.Application.Services
 
             user.TeamId = team.Id;
             user.TeamRole = RoleType.TeamMember;
+            user.LastModified = DateTime.UtcNow;
 
             await _userRepository.UpdateAsync(user);
         }
