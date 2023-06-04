@@ -1,11 +1,11 @@
 using MeetingManagement.Application;
 using MeetingManagement.Application.DTOs.Mail;
-using MeetingManagement.Persistance;
+using MeetingManagement.Persistence;
 using MeetingManagement.WebApp.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPersistanceServices(builder.Configuration);
+builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

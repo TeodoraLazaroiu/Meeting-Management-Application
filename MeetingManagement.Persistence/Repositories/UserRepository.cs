@@ -1,9 +1,9 @@
 ﻿using MeetingManagement.Core.Entities;
 using MeetingManagement.Core.Interfaces;
-using MeetingManagement.Persistance.Context;
+using MeetingManagement.Persistence.Context;
 using MongoDB.Driver;
 
-namespace MeetingManagement.Persistance.Repositories
+namespace MeetingManagement.Persistence.Repositories
 {
     internal class UserRepository : GenericRepository<UserEntity>, IUserRepository
     {

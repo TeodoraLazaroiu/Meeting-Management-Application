@@ -1,9 +1,9 @@
 ﻿using MeetingManagement.Core.Common;
 using MeetingManagement.Core.Interfaces;
-using MeetingManagement.Persistance.Context;
+using MeetingManagement.Persistence.Context;
 using MongoDB.Driver;
 
-namespace MeetingManagement.Persistance.Repositories
+namespace MeetingManagement.Persistence.Repositories
 {
     internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {

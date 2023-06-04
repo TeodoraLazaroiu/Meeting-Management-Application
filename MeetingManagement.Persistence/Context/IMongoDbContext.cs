@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace MeetingManagement.Persistance.Context
+namespace MeetingManagement.Persistence.Context
 {
     public interface IMongoDbContext
     {

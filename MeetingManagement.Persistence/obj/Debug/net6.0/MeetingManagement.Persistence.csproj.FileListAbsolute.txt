@@ -1,0 +1,15 @@
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/bin/Debug/net6.0/MeetingManagement.Persistence.deps.json
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/bin/Debug/net6.0/MeetingManagement.Persistence.dll
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/bin/Debug/net6.0/MeetingManagement.Persistence.pdb
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/bin/Debug/net6.0/MeetingManagement.Core.dll
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/bin/Debug/net6.0/MeetingManagement.Core.pdb
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.csproj.AssemblyReference.cache
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.AssemblyInfoInputs.cache
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.AssemblyInfo.cs
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.csproj.CoreCompileInputs.cache
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.csproj.CopyComplete
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.dll
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/refint/MeetingManagement.Persistence.dll
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/MeetingManagement.Persistence.pdb
+/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/Debug/net6.0/ref/MeetingManagement.Persistence.dll

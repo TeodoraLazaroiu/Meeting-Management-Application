@@ -1,8 +1,8 @@
 ﻿using MeetingManagement.Core.Entities;
 using MeetingManagement.Core.Interfaces;
-using MeetingManagement.Persistance.Context;
+using MeetingManagement.Persistence.Context;
 
-namespace MeetingManagement.Persistance.Repositories
+namespace MeetingManagement.Persistence.Repositories
 {
     internal class RecurringPatternRepository : GenericRepository<RecurringPatternEntity>, IRecurringPatternRepository
     {

@@ -1,14 +1,14 @@
 ﻿using MeetingManagement.Core.Interfaces;
-using MeetingManagement.Persistance.Context;
-using MeetingManagement.Persistance.Repositories;
+using MeetingManagement.Persistence.Context;
+using MeetingManagement.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MeetingManagement.Persistance
+namespace MeetingManagement.Persistence
 {
     public static class PersistenceServicesConfiguration
     {
-        public static IServiceCollection AddPersistanceServices(this IServiceCollection services, ConfigurationManager configuration)
+        public static IServiceCollection AddPersistenceServices(this IServiceCollection services, ConfigurationManager configuration)
         {
             var dbSettings = configuration.GetSection("MongoDatabase");
             services.Configure<MongoDbSettings>(dbSettings);

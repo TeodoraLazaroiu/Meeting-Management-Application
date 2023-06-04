@@ -1,4 +1,4 @@
-﻿namespace MeetingManagement.Persistance.Context
+﻿namespace MeetingManagement.Persistence.Context
 {
     public class MongoDbSettings
     {
