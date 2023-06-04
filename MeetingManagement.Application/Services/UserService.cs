@@ -67,7 +67,7 @@ namespace MeetingManagement.Application.Services
             user.PasswordSalt = hashResult.Item2;
 
             user.TeamId = null;
-            user.Role = RoleType.NoTeam;
+            user.TeamRole = RoleType.NoTeam;
 
             user.Id = Guid.NewGuid();
             user.CreatedDate = DateTime.UtcNow;
@@ -94,7 +94,7 @@ namespace MeetingManagement.Application.Services
             if (updateUser.TeamId == null)
             {
                 user.TeamId = null;
-                user.Role = RoleType.NoTeam;
+                user.TeamRole = RoleType.NoTeam;
             }
             else if (user.TeamId.ToString() != updateUser.TeamId)
             {
@@ -108,7 +108,7 @@ namespace MeetingManagement.Application.Services
                     throw new TeamNotFoundException();
                 }
                 user.TeamId = new Guid(updateUser.TeamId);
-                user.Role = RoleType.TeamMember;
+                user.TeamRole = RoleType.TeamMember;
             }
             
             user.LastModified = DateTime.UtcNow;

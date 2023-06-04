@@ -92,7 +92,7 @@ namespace MeetingManagement.Application.Services
 
             var user = await _userService.GetUserEntity(userId);
             user.TeamId = newTeam.Id;
-            user.Role = RoleType.TeamAdmin;
+            user.TeamRole = RoleType.TeamAdmin;
             await _userRepository.UpdateAsync(user);
 
             return newTeam;
@@ -105,7 +105,7 @@ namespace MeetingManagement.Application.Services
             var team = await GetTeamByAccessCode(accessCode);
 
             user.TeamId = team.Id;
-            user.Role = RoleType.TeamMember;
+            user.TeamRole = RoleType.TeamMember;
 
             await _userRepository.UpdateAsync(user);
         }
@@ -119,7 +119,7 @@ namespace MeetingManagement.Application.Services
         public async Task DeleteTeam(string userId)
         {
             var user = await _userService.GetUserEntity(userId);
-            if (user.Role != RoleType.TeamAdmin)
+            if (user.TeamRole != RoleType.TeamAdmin)
             {
                 throw new TeamDeletionException("Only the team admin can perform this operation");
             }
@@ -130,7 +130,7 @@ namespace MeetingManagement.Application.Services
             }
             else await _teamRepository.DeleteAsync(team.Id.ToString());
 
-            user.Role = RoleType.NoTeam;
+            user.TeamRole = RoleType.NoTeam;
             user.TeamId = null;
             await _userRepository.UpdateAsync(user);
         }

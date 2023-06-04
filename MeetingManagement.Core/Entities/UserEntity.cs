@@ -10,7 +10,7 @@ namespace MeetingManagement.Core.Entities
         public string PasswordHash { get; set; } = null!;
         public string PasswordSalt { get; set; } = null!;
         public string? JobTitle { get; set; }
-        public RoleType Role { get; set;  }
+        public RoleType TeamRole { get; set;  }
         public Guid? TeamId { get; set; }
 
     }

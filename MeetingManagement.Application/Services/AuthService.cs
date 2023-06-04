@@ -41,7 +41,7 @@ namespace MeetingManagement.Application.Services
             {
                 new Claim(ClaimConstants.UserIdClaim, user.Id.ToString()),
                 new Claim(ClaimConstants.UserEmailClaim, user.Email),
-                new Claim(ClaimConstants.UserRole, user.Role.ToString())
+                new Claim(ClaimConstants.UserRole, user.TeamRole.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

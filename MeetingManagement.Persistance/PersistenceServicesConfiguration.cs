@@ -18,7 +18,6 @@ namespace MeetingManagement.Persistance
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IResponseRepository, ResponseRepository>();
-            services.AddScoped<IEventExceptionRepository, EventExceptionRepository>();
             services.AddScoped<IRecurringPatternRepository, RecurringPatternRepository>();
 
             return services;

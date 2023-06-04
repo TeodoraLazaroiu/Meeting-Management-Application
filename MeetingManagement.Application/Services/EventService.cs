@@ -111,7 +111,6 @@ namespace MeetingManagement.Application.Services
                 recurringPattern.Id = eventEntity.Id;
 				recurringPattern.ReccurenceType = eventDetails.ReccurenceType;
                 recurringPattern.SeparationCount = eventDetails.SeparationCount;
-                recurringPattern.NumberOfOccurences = eventDetails.NumberOfOccurences;
                 recurringPattern.DaysOfWeek = eventDetails.DaysOfWeek;
                 recurringPattern.DayOfWeek = eventDetails.DayOfWeek;
                 recurringPattern.DayOfMonth = eventDetails.DayOfMonth;

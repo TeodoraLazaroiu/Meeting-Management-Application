@@ -12,9 +12,6 @@ namespace MeetingManagement.Core.Entities
         public bool IsRecurring { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public bool? IsCancelled { get; set; }
-        public bool? IsRescheduled { get; set; }
-        public Guid? ParentEventId { get; set; }
         public Guid CreatedBy { get; set; }
 
     }
