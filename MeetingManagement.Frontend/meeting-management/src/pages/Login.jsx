@@ -77,7 +77,7 @@ export const Login = () => {
               </div>
 
               <div className="row container-fluid">
-              <button type="submit" className="col-sm-3 btn btn-primary btn-block" style={{backgroundColor: "#3474b0"}}>
+              <button type="submit" className="col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}}>
                 Sign in
               </button>
               <span className="col-sm-9 px-3 pt-2">Don't have an account? <Link to="/register">Sign up</Link></span>

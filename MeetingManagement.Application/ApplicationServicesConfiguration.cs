@@ -21,7 +21,6 @@ namespace MeetingManagement.Application
                         context.Response.StatusCode = 401;
                         return Task.CompletedTask;
                     };
-                    options.Cookie.SameSite = SameSiteMode.None;
                 });
 
             services.AddScoped<IAuthService, AuthService>();
@@ -29,11 +28,10 @@ namespace MeetingManagement.Application
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IResponseService, ResponseService>();
+            services.AddTransient<IMailService, MailService>();
 
             services.AddHostedService<ReminderService>();
             services.AddHttpContextAccessor();
-
-            services.AddTransient<IMailService, MailService>();
 
             return services;
         }

@@ -30,7 +30,7 @@ export const EventCard = ({eventDate, eventId}) => {
 
     return (
         <div className="card bg-light" style={{maxWidth: 450}}>
-            <div className="card-header">Meeting details</div>
+            <div className="card-header"><b>Meeting details</b></div>
             <div className="card-body">
                 <h5 className="card-title">{event.eventTitle}</h5>
                 <div className="text-lg-start mx-4 my-3 card-text">

@@ -99,8 +99,8 @@ namespace MeetingManagement.Application.Services
 
             if (eventEntity.IsRecurring)
 			{
-                var recurrenceTypes = Enum.GetValues(typeof(ReccurenceType)).Cast<ReccurenceType>().ToList();
-                if (!recurrenceTypes.Contains(eventDetails.ReccurenceType))
+                var recurrenceTypes = Enum.GetValues(typeof(RecurrenceType)).Cast<RecurrenceType>().ToList();
+                if (!recurrenceTypes.Contains(eventDetails.RecurrenceType))
                 {
                     throw new EventValidationException("Invalid recurrence type");
                 }
@@ -108,7 +108,7 @@ namespace MeetingManagement.Application.Services
 				var recurringPattern = new RecurringPatternEntity();
 
                 recurringPattern.Id = eventEntity.Id;
-				recurringPattern.ReccurenceType = eventDetails.ReccurenceType;
+				recurringPattern.ReccurenceType = eventDetails.RecurrenceType;
                 recurringPattern.SeparationCount = eventDetails.SeparationCount;
                 recurringPattern.DaysOfWeek = eventDetails.DaysOfWeek;
                 recurringPattern.DayOfWeek = eventDetails.DayOfWeek;
@@ -284,7 +284,7 @@ namespace MeetingManagement.Application.Services
 
                     while (currentDate <= endDate)
                     {
-                        if (recurrence.ReccurenceType == ReccurenceType.Daily)
+                        if (recurrence.ReccurenceType == RecurrenceType.Daily)
                         {
                             if (recurrence.DaysOfWeek == null)
                             {
@@ -308,7 +308,7 @@ namespace MeetingManagement.Application.Services
                             }
                             currentDate = currentDate.AddDays(1);
                         }
-                        else if (recurrence.ReccurenceType == ReccurenceType.Weekly)
+                        else if (recurrence.ReccurenceType == RecurrenceType.Weekly)
                         {
                             if (recurrence.DayOfWeek == null)
                             {

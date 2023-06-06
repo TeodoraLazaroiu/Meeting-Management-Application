@@ -62,7 +62,7 @@ export function SecondRegisterForm ({secondCallback}) {
               <button onClick={handleBack} type="button" className="mx-2 col-sm-3 btn btn-secondary btn-block">
                 Back
               </button>
-              <button type="submit" className="col-sm-3 btn btn-primary btn-block" style={{backgroundColor: "#3474b0"}}>
+              <button type="submit" className="col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}}>
                 Submit
               </button>
               <span className="col-sm-3 pt-2"><Link to="/login">Sign in</Link></span>

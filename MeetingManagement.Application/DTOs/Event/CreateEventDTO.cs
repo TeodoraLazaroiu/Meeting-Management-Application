@@ -12,7 +12,7 @@ namespace MeetingManagement.Application.DTOs.Event
         public bool IsRecurring { get; set; }
         public string StartDate { get; set; } = null!;
         public string EndDate { get; set; } = null!;
-        public ReccurenceType ReccurenceType { get; set; }
+        public RecurrenceType RecurrenceType { get; set; }
         public int? SeparationCount { get; set; }
         public int? NumberOfOccurences { get; set; }
         public List<int>? DaysOfWeek { get; set; }

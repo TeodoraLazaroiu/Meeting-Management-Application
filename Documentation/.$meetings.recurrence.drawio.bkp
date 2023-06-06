@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-06-03T18:34:54.311Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="84qJcSOdrG1W9JHKQe3q" version="21.2.8" type="device">
+<mxfile host="Electron" modified="2023-06-03T18:50:23.270Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="j60dGRAWzY-sJyI4DBpS" version="21.2.8" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1026" dy="512" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -40,13 +40,13 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="7c4nMaesLM7IGDHAdHo5-8" value="&lt;b&gt;Daily&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#99CCFF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="7c4nMaesLM7IGDHAdHo5-8" value="&lt;b&gt;Daily&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#7EA6E0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="420" y="160" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7c4nMaesLM7IGDHAdHo5-9" value="&lt;b&gt;Weekly&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#CCE5FF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="7c4nMaesLM7IGDHAdHo5-9" value="&lt;b&gt;Weekly&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#99CCFF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="420" y="280" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="7c4nMaesLM7IGDHAdHo5-10" value="&lt;b&gt;Monthly&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#CCFFFF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="7c4nMaesLM7IGDHAdHo5-10" value="&lt;b&gt;Monthly&lt;/b&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=13;fillColor=#CCE5FF;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="420" y="400" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="7c4nMaesLM7IGDHAdHo5-23" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" edge="1">

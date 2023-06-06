@@ -11,6 +11,7 @@ import AuthContext from '../utils/AuthContext';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { EventCard } from '../components/ui/EventCard';
+import { CreateEventForm } from '../components/form/CreateEventForm';
 
 const locales = {
     "en-GB": require('date-fns/locale/en-GB')
@@ -31,6 +32,7 @@ export const Home = () => {
     const [selectedEvent, setSelectedEvent] = useState(false);
     const [selectedEventDate, setSelectedEventDate] = useState('');
     const [eventId, setEventId] = useState('');
+    const [createNewEvent, setCreateNewEvent] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -77,6 +79,7 @@ export const Home = () => {
     }, [jsonEvents]);
 
     const onSelectEvent = useCallback((callEvent) => {
+        setCreateNewEvent(false)
         setSelectedEvent(true)
         setEventId(callEvent.id)
         setSelectedEventDate(callEvent.start)
@@ -84,17 +87,27 @@ export const Home = () => {
 
     const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
 
+    const handleCreateNewEvent = (e) => {
+        e.preventDefault()
+        setSelectedEvent(false)
+        setCreateNewEvent(true)
+    }
+
     return (
         <div>
             <Navbar/>
         <div className="container-fluid">
         <div className="row">
           <div className="col">
-            <div className="mx-5 text-start text-secondary" style={{marginTop: 25, marginBottom: -25}}><h3><b>Your calendar</b></h3></div>
+            <div className="mx-5" style={{marginTop: 25}}>
+                <h3 style={{marginBottom: 25, float: "left"}}><b>Your calendar</b></h3>
+                <button onClick={handleCreateNewEvent} className="mt-2 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0", float: "right"}}>Create new event</button>
+            </div>
           <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}}/>
           </div>
           <div className="col mx-2 my-5">
           {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}
+          {createNewEvent && <CreateEventForm/>}
           </div>
         </div>
         </div>

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using MeetingManagement.Application.DTOs.Response;
-using Org.BouncyCastle.Asn1.Ocsp;
 using MeetingManagement.Application.DTOs.Mail;
 
 namespace MeetingManagement.Application.Services
