@@ -11,6 +11,7 @@ import AuthContext from '../utils/AuthContext';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { EventCard } from '../components/ui/EventCard';
+import { Link } from 'react-router-dom'
 
 const locales = {
     "en-GB": require('date-fns/locale/en-GB')
@@ -32,6 +33,7 @@ export const Team = () => {
     const [selectedEventDate, setSelectedEventDate] = useState('');
     const [eventId, setEventId] = useState('');
     const [team, setTeam] = useState('');
+    const [hasNoTeam, setHasNoTeam] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -46,6 +48,10 @@ export const Team = () => {
     }, function (error) {
         if (!error.response) {
             setAuthenticated(false)
+        }
+        if (error.response.status === 404)
+        {
+            setHasNoTeam(true)
         }
     });
 
@@ -69,8 +75,11 @@ export const Team = () => {
         const getTeam = async () => {
         await client.get('/team')
             .then((response) => {
-                const data = response.data;
-                setTeam(data)
+                if (response.data)
+                {
+                    const data = response.data;
+                    setTeam(data)
+                }
             })
             .catch((error) => {
                 console.log(error)
@@ -110,6 +119,12 @@ export const Team = () => {
           </div>
           <div className="col mx-2 my-5">
           {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}
+          {hasNoTeam && <div className="card bg-light" style={{maxWidth: 350}}>
+            <div className="card-header"><b>You have no team</b></div>
+            <div className="card-body">
+                <h6 className="card-text"><Link to='/join'>Join or create one</Link></h6>
+            </div>
+        </div>}
           </div>
         </div>
         </div>

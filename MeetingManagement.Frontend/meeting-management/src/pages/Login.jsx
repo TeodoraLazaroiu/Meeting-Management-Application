@@ -18,6 +18,7 @@ export const Login = () => {
 
     const navigate = useNavigate();
     const [isSuccessful, setIsSuccessful] = useState(false);
+    const [hasTeam, setHasTeam] = useState('');
     const { setAuthenticated } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
@@ -32,7 +33,7 @@ export const Login = () => {
               "email": email,
               "password": password
             })
-            .then((response) => {
+            .then(() => {
               setIsSuccessful(true);
             })
             .catch((error) => {
@@ -42,11 +43,25 @@ export const Login = () => {
     }
 
     useEffect(() => {
+      const getTeam = async () => {
+        await client.get('/team')
+            .then(() => {
+                setHasTeam(true)
+            })
+            .catch(() => {
+                setHasTeam(false)
+            })
+          }
+
       if (isSuccessful) {
-        setAuthenticated(true);
-        navigate('/home')
+        getTeam()
       }
     })
+
+    useEffect(() => {
+      if (hasTeam && isSuccessful) navigate('/home')
+      if (!hasTeam && isSuccessful) navigate('/join')
+    }, [hasTeam]);
 
     const styles = {
       main : {

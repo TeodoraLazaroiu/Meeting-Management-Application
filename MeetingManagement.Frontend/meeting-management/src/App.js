@@ -7,6 +7,7 @@ import AuthContext from './utils/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Team } from './pages/Team';
+import { NoTeam } from './pages/NoTeam'
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -42,6 +43,7 @@ function App() {
           <Route path='/register' element={<Register/>}/>
           <Route path='/home' element={<Home/>}/>
           <Route path='/team' element={<Team/>}/>
+          <Route path='/join' element={<NoTeam/>}/>
         </Routes>
       </AuthContext.Provider>
     </div>

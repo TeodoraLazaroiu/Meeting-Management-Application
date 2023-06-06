@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import DatePicker, { setDefaultLocale } from 'react-datepicker';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import axios from 'axios';
-import moment from 'moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TimePicker from "react-bootstrap-time-picker";
@@ -67,7 +66,7 @@ export const CreateEventForm = () => {
         else if (recurrenceType === '2')
         {
             var day = new Date(startDate).getDay()
-            if (day == 0) day = 7;
+            if (day === 0) day = 7;
             event.dayOfWeek = day
         }
         else if (recurrenceType === '3')

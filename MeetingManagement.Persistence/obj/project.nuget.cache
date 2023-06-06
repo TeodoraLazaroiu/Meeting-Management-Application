@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uqj6oHEhmsybXm+DtHk4UloJFOFY7MT8yakPzYtWOsfPiFtIdU3ySPsfrKTqK7UtNTL4CxwrG/IpbPyWsuRk6g==",
+  "dgSpecHash": "bUc+txOMAvR8/MRzR1UrEbRH7gkznZCV0L6jEpeIGHNr3YkVS/Z+/PjiNQSXPhL7eaj9VGSzZggqZvUzwUVfPg==",
   "success": true,
-  "projectFilePath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistance/MeetingManagement.Persistance.csproj",
+  "projectFilePath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/MeetingManagement.Persistence.csproj",
   "expectedPackageFiles": [
     "/Users/teodoralazaroiu/.nuget/packages/awssdk.core/3.7.100.14/awssdk.core.3.7.100.14.nupkg.sha512",
     "/Users/teodoralazaroiu/.nuget/packages/awssdk.securitytoken/3.7.100.14/awssdk.securitytoken.3.7.100.14.nupkg.sha512",

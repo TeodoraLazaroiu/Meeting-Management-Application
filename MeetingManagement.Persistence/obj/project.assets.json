@@ -1120,11 +1120,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistance/MeetingManagement.Persistance.csproj",
-      "projectName": "MeetingManagement.Persistance",
-      "projectPath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistance/MeetingManagement.Persistance.csproj",
+      "projectUniqueName": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/MeetingManagement.Persistence.csproj",
+      "projectName": "MeetingManagement.Persistence",
+      "projectPath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/MeetingManagement.Persistence.csproj",
       "packagesPath": "/Users/teodoralazaroiu/.nuget/packages/",
-      "outputPath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistance/obj/",
+      "outputPath": "/Users/teodoralazaroiu/Meeting-Management-Application/MeetingManagement.Persistence/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/teodoralazaroiu/.nuget/NuGet/NuGet.Config"
