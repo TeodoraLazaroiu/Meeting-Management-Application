@@ -21,22 +21,6 @@ namespace MeetingManagement.WebApp.Controllers
             _teamService = teamService;
         }
 
-        // to do: remove
-        [HttpGet("all")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllTeams()
-        {
-            try
-            {
-                var teams = await _teamService.GetAllTeams();
-                return Ok(teams);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetTeam()
         {

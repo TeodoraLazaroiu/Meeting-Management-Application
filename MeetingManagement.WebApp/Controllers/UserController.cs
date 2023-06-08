@@ -19,22 +19,6 @@ namespace MeetingManagement.WebApp.Controllers
         {
             _userService = userService;
         }
-         // to do: remove
-        [HttpGet("all")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            try
-            {
-                var users = await _userService.GetUserList();
-                return Ok(users);
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
         [HttpGet]
         public async Task<IActionResult> GetUser()

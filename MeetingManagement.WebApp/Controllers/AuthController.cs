@@ -1,11 +1,13 @@
 ﻿using MeetingManagement.Application.DTOs.User;
 using MeetingManagement.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagement.WebApp.Controllers
 {
     [Route("api/auth")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -16,6 +18,7 @@ namespace MeetingManagement.WebApp.Controllers
         }
 
         [HttpPost("signIn")]
+        [AllowAnonymous]
         public async Task<IActionResult> SignInUser([FromBody] SignInUserDTO userCredentials)
         {
             try
