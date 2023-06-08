@@ -1,0 +1,43 @@
+<mxfile host="Electron" modified="2023-06-08T15:25:45.213Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="OyOqIit94yNTO3UI_5BM" version="21.2.8" type="device">
+  <diagram name="Page-1" id="eyEo6rqgWXCPPhQaU9Pb">
+    <mxGraphModel dx="627" dy="475" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-1" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 16px;&quot;&gt;&lt;b&gt;&lt;font color=&quot;#99ccff&quot;&gt;(?=^.{8,}$)&lt;/font&gt;&lt;font color=&quot;#66b2ff&quot;&gt;(?=.*\\d)&lt;/font&gt;&lt;font color=&quot;#3399ff&quot;&gt;(?=.*\\W)&lt;/font&gt;&lt;font color=&quot;#007fff&quot;&gt;(?=.*[A-Z])&lt;/font&gt;&lt;font color=&quot;#0066cc&quot;&gt;(?=.*[a-z])&lt;/font&gt;&lt;font color=&quot;#004c99&quot;&gt;.*$&lt;/font&gt;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="155" y="210" width="540" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-4" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=-90;fontStyle=1;strokeWidth=1;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="210" y="190.34" width="20" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-5" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=-90;fontStyle=1;strokeWidth=1;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="307.5" y="202.84" width="20" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-6" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=-90;fontStyle=1;strokeWidth=1;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="391" y="204.09" width="20" height="82.5" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-7" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=-90;fontStyle=1;strokeWidth=1;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="487.5" y="190" width="20" height="110.66" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-8" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=-90;fontStyle=1;strokeWidth=1;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="590.28" y="197.76" width="20" height="95.16" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-13" value="&lt;font face=&quot;Times New Roman&quot;&gt;cel puțin 8 caractere&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="262.92" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-14" value="&lt;font face=&quot;Times New Roman&quot;&gt;cel puțin o cifră&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="287.5" y="262.92" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-15" value="&lt;font face=&quot;Times New Roman&quot;&gt;cel puțin un caracter special&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="361.5" y="262.92" width="79" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-16" value="&lt;font face=&quot;Times New Roman&quot;&gt;cel puțin o majusculă&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="467.5" y="262.92" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0KYMQzcqXQ-D_f3Jp8Ol-17" value="&lt;font face=&quot;Times New Roman&quot;&gt;cel puțin o minusculă&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="570.28" y="262.92" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

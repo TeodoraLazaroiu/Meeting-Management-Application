@@ -123,7 +123,7 @@ namespace MeetingManagement.Application.Services
             var user = await _userService.GetUserEntity(userId);
             if (user.TeamRole != RoleType.TeamAdmin)
             {
-                throw new TeamDeletionException("Only the team admin can perform this operation");
+                throw new UserInsufficientPermissionsException("Only the team admin can perform this operation");
             }
             var team = await GetTeamByUserId(userId);
             if (team.TeamMembers.Count != 1)

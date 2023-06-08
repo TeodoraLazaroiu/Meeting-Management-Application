@@ -16,12 +16,12 @@ namespace MeetingManagement.Application
                     options.Cookie.Name = "SessionCookie";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
+                    options.Cookie.SameSite = SameSiteMode.None;
                     options.Events.OnRedirectToLogin = (context) =>
                     {
                         context.Response.StatusCode = 401;
                         return Task.CompletedTask;
                     };
-                    options.Cookie.SameSite = SameSiteMode.None;
                 });
 
             services.AddScoped<IAuthService, AuthService>();

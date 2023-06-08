@@ -44,6 +44,10 @@ namespace MeetingManagement.WebApp.Middlewares
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     errorResponse = "Invalid user credentials";
                     break;
+                case UserInsufficientPermissionsException:
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    errorResponse = exception.Message;
+                    break;
                 case TeamNotFoundException:
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorResponse = "The team was not found";
