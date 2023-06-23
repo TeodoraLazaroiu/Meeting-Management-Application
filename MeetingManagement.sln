@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingsManagement.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.Persistence", "MeetingManagement.Persistence\MeetingManagement.Persistence.csproj", "{C5B45263-5C18-4EE7-BFDE-4D33A6CE5316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetingManagement.UserInterface", "MeetingManagement.UserInterface\MeetingManagement.UserInterface.csproj", "{69BEE08B-77B7-4921-850D-3BE6BEAD70D5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{C5B45263-5C18-4EE7-BFDE-4D33A6CE5316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5B45263-5C18-4EE7-BFDE-4D33A6CE5316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5B45263-5C18-4EE7-BFDE-4D33A6CE5316}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69BEE08B-77B7-4921-850D-3BE6BEAD70D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69BEE08B-77B7-4921-850D-3BE6BEAD70D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69BEE08B-77B7-4921-850D-3BE6BEAD70D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69BEE08B-77B7-4921-850D-3BE6BEAD70D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

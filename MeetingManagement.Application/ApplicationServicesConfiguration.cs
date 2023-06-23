@@ -29,7 +29,7 @@ namespace MeetingManagement.Application
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IResponseService, ResponseService>();
-            services.AddTransient<IMailService, MailService>();
+            services.AddScoped<IMailService, MailService>();
 
             services.AddHostedService<ReminderService>();
             services.AddHttpContextAccessor();

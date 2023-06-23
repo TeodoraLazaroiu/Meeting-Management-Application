@@ -114,8 +114,8 @@ export const Team = () => {
         <div className="container-fluid">
         <div className="row">
           <div className="col">
-          <div className="mx-5 text-start text-secondary" style={{marginTop: 25, marginBottom: -25}}><h3><b>{team.teamName ?? "Team"}'s calendar</b></h3></div>
-          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}}/>
+          <div className="mx-5 text-start text-secondary" style={{marginTop: 25, marginBottom: -25}}><h3><b>{"Team"}'s calendar</b></h3></div>
+          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} popup style={{width: 700, height: 500, margin: "50px"}}/>
           </div>
           <div className="col mx-2 my-5">
           {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}

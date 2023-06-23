@@ -20,6 +20,7 @@ export const CreateEventForm = () => {
     const [separationCount, setSeparationCount] = useState(0);
     const [recurrenceUnit, setRecurrenceUnit] = useState('');
     const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState([]);
+    const [formNumber, setFormNumber] = useState(1);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -101,7 +102,7 @@ export const CreateEventForm = () => {
         setSelectedDaysOfWeek(days)
       }
 
-    return (
+    if (formNumber === 1) return (
         <div onSubmit={handleCreateEvent} className="card bg-light" style={{maxWidth: 450}}>
             <div className="card-header"><b>Create new event</b></div>
             <div className="card-body text-start">

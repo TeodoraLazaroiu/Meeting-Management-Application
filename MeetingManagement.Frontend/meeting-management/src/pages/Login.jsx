@@ -84,11 +84,17 @@ export const Login = () => {
               <div className="form-outline mb-4">
                 <label className="form-label" htmlFor="emailInput">Email</label>
                 <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="emailInput" className="form-control" required/>
+                <div className="invalid-feedback">
+                    Please provide an email.
+                </div>
               </div>
 
               <div className="form-outline mb-4">
                 <label className="form-label" htmlFor="passwordInput">Password</label>
                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="passwordInput" className="form-control" required/>
+                <div className="invalid-feedback">
+                    Please provide a password.
+                </div>
               </div>
 
               <div className="row container-fluid">

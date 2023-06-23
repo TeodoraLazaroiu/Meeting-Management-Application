@@ -2,7 +2,7 @@ using MeetingManagement.Application;
 using MeetingManagement.Application.DTOs.Mail;
 using MeetingManagement.Persistence;
 using MeetingManagement.Persistence.Context;
-using MeetingManagement.WebApp.Extensions;
+using MeetingManagement.WebApp.Middlewares;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +11,7 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 var mailSettings = builder.Configuration.GetSection("MailSettings");
-builder.Services.Configure<MailSettings>(mailSettings);
+builder.Services.Configure<MailSettingsDTO>(mailSettings);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -38,15 +38,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors();
-
 app.MapControllers();
-
-app.AddErrorHandler();
 
 app.Run();

@@ -64,6 +64,7 @@ export const Register = () => {
         })
         .catch((error) => {
           toast.error(error.response.data)
+          console.log(error.response.data)
         });
     }
 
@@ -71,9 +72,7 @@ export const Register = () => {
     const { setAuthenticated } = useContext(AuthContext);
 
     useEffect(() => {
-      if (registerSuccess) {
-        loginUser()
-      }
+      if (registerSuccess) loginUser()
     }, [registerSuccess]);
 
     const loginUser = async () => {

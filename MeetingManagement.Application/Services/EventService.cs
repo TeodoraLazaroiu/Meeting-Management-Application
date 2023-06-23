@@ -126,6 +126,7 @@ namespace MeetingManagement.Application.Services
                 response.UserId = attendee;
                 response.CreatedDate = DateTime.UtcNow;
                 response.LastModified = DateTime.UtcNow;
+                if (attendee.ToString() == userId) response.IsAttending = true;
                 await _responseRepository.CreateAsync(response);
             }
         }
@@ -226,8 +227,11 @@ namespace MeetingManagement.Application.Services
             }
 
             var events = await _eventRepository.GetEventsForUserIds(users);
+
+            // remove this ?
             var eventsForDate = events.Where(x => DateOnly.FromDateTime(x.StartDate)
                 <= selectedDate && DateOnly.FromDateTime(x.EndDate) >= selectedDate).ToList();
+
             var eventOccurencesForDate = await GetEventsOccurences(eventsForDate,
                     selectedDate.Year, selectedDate.Month, selectedDate.Day);
 

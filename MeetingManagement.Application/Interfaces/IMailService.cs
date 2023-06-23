@@ -4,7 +4,7 @@ namespace MeetingManagement.Application.Interfaces
 {
 	public interface IMailService
 	{
-        Task SendEmailAsync(MailRequest mailRequest);
+        Task SendEmailAsync(SendMailDTO mailRequest);
     }
 }
 

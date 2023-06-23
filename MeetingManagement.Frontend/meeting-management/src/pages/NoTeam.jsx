@@ -35,7 +35,7 @@ export const NoTeam = () => {
 
         if (form.checkValidity())
         {
-            await client.post('/team/join?=accessCode' + accessCode)
+            await client.post('/team/join?accessCode=' + accessCode)
               .then((response) => {
                 console.log(response)
                 toast.success("Team joined successfully")
@@ -44,6 +44,7 @@ export const NoTeam = () => {
                 }, 3000);
               })
               .catch((error) => {
+                console.log(error.response.data)
                 toast.error(error.response.data)
               });
         }

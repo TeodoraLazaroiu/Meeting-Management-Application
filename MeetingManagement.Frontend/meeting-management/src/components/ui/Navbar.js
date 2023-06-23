@@ -13,7 +13,7 @@ export const Navbar = () => {
 
     const handleLogout = async () => {
         await client.post('/auth/signOut')
-          .then((response) => {
+          .then(() => {
             setAuthenticated(false)
           })
           .catch((error) => {

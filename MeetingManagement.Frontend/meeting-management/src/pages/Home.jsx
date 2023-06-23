@@ -36,8 +36,8 @@ export const Home = () => {
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
-      withCredentials: true,
-      baseURL: apiUrl
+        withCredentials: true,
+        baseURL: apiUrl
     })
 
     const { setAuthenticated } = useContext(AuthContext);
@@ -56,11 +56,13 @@ export const Home = () => {
             .then((response) => {
                 const data = response.data;
                 setJsonEvents(data)
+                console.log(response.data)
+                console.log(date)
             })
             .catch((error) => {
                 console.log(error)
             })
-          }
+            }
         var year = date.getFullYear()
         var month = date.getMonth() + 1
         getEvents(year, month)
@@ -68,13 +70,20 @@ export const Home = () => {
 
     useEffect(() => {
         const mapDateAndTime = (time, date) => {
+            console.log(time)
+            console.log(date)
             var timeOnly = time.split(':')
-            var dateOnly = date.split('.')
-            return new Date(dateOnly[2], dateOnly[1] - 1, dateOnly[0], timeOnly[0], timeOnly[1])
+            var dateOnly = date.split('/')
+            console.log("year: " + dateOnly[2])
+            console.log("month: " + dateOnly[1])
+            console.log("day: " + dateOnly[0])
+            return new Date(dateOnly[2], dateOnly[0] - 1, dateOnly[1], timeOnly[0], timeOnly[1])
         }
         
+        console.log(jsonEvents)
         var events = jsonEvents.map(e => ({ id: e.id, title: e.eventTitle, start: mapDateAndTime(e.startTime, e.date), end: mapDateAndTime(e.endTime, e.date)}))
         setEvents(events)
+        console.log(events)
 
     }, [jsonEvents]);
 

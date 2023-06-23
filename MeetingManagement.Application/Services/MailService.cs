@@ -10,17 +10,17 @@ namespace MeetingManagement.Application.Services
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailSettings;
+        private readonly MailSettingsDTO _mailSettings;
 
-        public MailService(IOptions<MailSettings> mailSettings)
+        public MailService(IOptions<MailSettingsDTO> mailSettings)
         {
             _mailSettings = mailSettings.Value;
         }
 
-        public async Task SendEmailAsync(MailRequest mailRequest)
+        public async Task SendEmailAsync(SendMailDTO mailRequest)
         {
             var email = new MimeMessage();
-            email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail);
+            email.Sender = new MailboxAddress(_mailSettings.Name, _mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(mailRequest.Recipient));
             email.Subject = mailRequest.Subject;
 
@@ -28,7 +28,7 @@ namespace MeetingManagement.Application.Services
             messageBuilder.HtmlBody = mailRequest.Message;
             email.Body = messageBuilder.ToMessageBody();
 
-            using var smtp = new SmtpClient();
+            var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await smtp.SendAsync(email);

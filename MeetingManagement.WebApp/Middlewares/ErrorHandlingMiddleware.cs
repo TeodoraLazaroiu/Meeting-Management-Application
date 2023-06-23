@@ -1,4 +1,5 @@
 ﻿using MeetingManagement.Application.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace MeetingManagement.WebApp.Middlewares
@@ -74,7 +75,6 @@ namespace MeetingManagement.WebApp.Middlewares
                     break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    errorResponse = exception.Message;
                     break;
             }
 

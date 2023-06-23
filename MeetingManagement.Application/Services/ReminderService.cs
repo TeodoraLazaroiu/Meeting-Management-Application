@@ -9,15 +9,15 @@ using MeetingManagement.Application.DTOs.Mail;
 
 namespace MeetingManagement.Application.Services
 {
-	public class ReminderService : BackgroundService
+    public class ReminderService : BackgroundService
     {
         private readonly ILogger<ReminderService> _logger;
-        public IServiceProvider _services { get; }
+        public IServiceProvider services { get; }
 
-        public ReminderService(ILogger<ReminderService> logger, IServiceProvider services)
+        public ReminderService(ILogger<ReminderService> logger, IServiceProvider service)
         {
             _logger = logger;
-            _services = services;
+            services = service;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,12 +25,13 @@ namespace MeetingManagement.Application.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
-                Console.WriteLine(now);
+                Console.WriteLine("Before starting background service: {0}", now);
                 await CheckEventsAndReminders();
 
                 now = DateTime.Now;
-                var second = DateTime.Now.Second;
-                Console.WriteLine(now);
+                Console.WriteLine("After running background service: {0}", now);
+
+                var second = now.Second;
                 await Task.Delay(60000 - second * 1000, stoppingToken);
             }
         }
@@ -40,7 +41,7 @@ namespace MeetingManagement.Application.Services
             try
             {
                 _logger.LogInformation("Starting background task");
-                using (var scope = _services.CreateScope())
+                using (var scope = services.CreateScope())
                 {
                     var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
                     var responseService = scope.ServiceProvider.GetRequiredService<IResponseService>();
@@ -76,7 +77,7 @@ namespace MeetingManagement.Application.Services
                         if (reminderHour == currentHour && reminderMinute == currentMinute)
                         {
                             _logger.LogInformation("Sending email to: {email}", response.UserEmail);
-                            var request = new MailRequest();
+                            var request = new SendMailDTO();
                             request.Recipient = response.UserEmail ?? "";
                             request.Subject = $"Reminder for meeting: {response.EventTitle}";
                             request.Message = $"Your meeting will start in {response.ReminderTime} minutes";
@@ -88,7 +89,7 @@ namespace MeetingManagement.Application.Services
             }
             catch
             {
-                throw;
+                
             }
         }
     }

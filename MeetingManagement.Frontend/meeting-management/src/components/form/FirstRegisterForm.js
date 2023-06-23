@@ -19,13 +19,11 @@ export function FirstRegisterForm ({firstCallback}) {
 
         if (pass.value !== confirm.value)
         {
-            pass.classList.add('is-invalid')
             confirm.classList.add('is-invalid')
             passwordIsValid = false
         }
         else
         {
-            pass.classList.remove('is-invalid')
             confirm.classList.remove('is-invalid')
         }
 
@@ -56,6 +54,9 @@ export function FirstRegisterForm ({firstCallback}) {
                 <label className="form-label" htmlFor="passwordInput">Password</label>
                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password"
                 id="passwordInput" className="form-control" required/>
+                <div className="invalid-feedback">
+                    Please provide a password that contains at least one digit, one special character, a lowercase and an uppercase letter and has a length of at least 8 characters.
+                </div>
               </div>
 
               <div className="form-outline mb-4">

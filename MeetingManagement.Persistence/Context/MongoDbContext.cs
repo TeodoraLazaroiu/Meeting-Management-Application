@@ -7,6 +7,7 @@ namespace MeetingManagement.Persistence.Context
     {
         private IMongoDatabase _database { get; set; }
         private MongoClient _client { get; set; }
+
         public MongoDbContext(IOptions<MongoDbSettings> connectionSettings)
         {
             _client = new MongoClient(connectionSettings.Value.ConnectionString);

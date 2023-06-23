@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using MeetingManagement.Core.Common;
+using MeetingManagement.Application.DTOs.Event;
+using MeetingManagement.Core.Entities;
 
 namespace MeetingManagement.Application.Services
 {
