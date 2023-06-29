@@ -11,6 +11,7 @@ import AuthContext from '../utils/AuthContext';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { EventCard } from '../components/ui/EventCard';
+import { InvitesCard } from '../components/ui/InvitesCard';
 import { CreateEventForm } from '../components/form/CreateEventForm';
 
 const locales = {
@@ -81,8 +82,8 @@ export const Home = () => {
 
     const onSelectEvent = useCallback((callEvent) => {
         setCreateNewEvent(false)
-        setSelectedEvent(true)
         setViewInvites(false)
+        setSelectedEvent(true)
         setEventId(callEvent.id)
         setSelectedEventDate(callEvent.start)
       }, [])
@@ -90,13 +91,15 @@ export const Home = () => {
     const handleCreateNewEvent = (e) => {
         e.preventDefault()
         setSelectedEvent(false)
-        setCreateNewEvent(true)
         setViewInvites(false)
+        setCreateNewEvent(true)
     }
 
     const handleViewInvites = (e) => {
         e.preventDefault()
         setViewInvites(true)
+        setSelectedEvent(false)
+        setCreateNewEvent(false)
     }
 
     const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
@@ -112,10 +115,11 @@ export const Home = () => {
                 <button onClick={handleCreateNewEvent} className="mt-2 mx-1 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0", float: "right"}}>Create new event</button>
                 <button onClick={handleViewInvites} className="mt-2 mx-1 btn btn-secondary btn-block" style={{float: "right"}}>Invites</button>
             </div>
-          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}}/>
+          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}} popup/>
           </div>
           <div className="col mx-2 my-5">
           {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}
+          {viewInvites && <InvitesCard/>}
           {createNewEvent && <CreateEventForm/>}
           </div>
         </div>
