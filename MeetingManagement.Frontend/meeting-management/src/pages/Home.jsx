@@ -33,6 +33,7 @@ export const Home = () => {
     const [selectedEventDate, setSelectedEventDate] = useState('');
     const [eventId, setEventId] = useState('');
     const [createNewEvent, setCreateNewEvent] = useState(false);
+    const [viewInvites, setViewInvites] = useState(true);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -56,8 +57,6 @@ export const Home = () => {
             .then((response) => {
                 const data = response.data;
                 setJsonEvents(data)
-                console.log(response.data)
-                console.log(date)
             })
             .catch((error) => {
                 console.log(error)
@@ -70,37 +69,37 @@ export const Home = () => {
 
     useEffect(() => {
         const mapDateAndTime = (time, date) => {
-            console.log(time)
-            console.log(date)
             var timeOnly = time.split(':')
             var dateOnly = date.split('/')
-            console.log("year: " + dateOnly[2])
-            console.log("month: " + dateOnly[1])
-            console.log("day: " + dateOnly[0])
             return new Date(dateOnly[2], dateOnly[0] - 1, dateOnly[1], timeOnly[0], timeOnly[1])
         }
         
-        console.log(jsonEvents)
         var events = jsonEvents.map(e => ({ id: e.id, title: e.eventTitle, start: mapDateAndTime(e.startTime, e.date), end: mapDateAndTime(e.endTime, e.date)}))
         setEvents(events)
-        console.log(events)
 
     }, [jsonEvents]);
 
     const onSelectEvent = useCallback((callEvent) => {
         setCreateNewEvent(false)
         setSelectedEvent(true)
+        setViewInvites(false)
         setEventId(callEvent.id)
         setSelectedEventDate(callEvent.start)
       }, [])
-
-    const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
 
     const handleCreateNewEvent = (e) => {
         e.preventDefault()
         setSelectedEvent(false)
         setCreateNewEvent(true)
+        setViewInvites(false)
     }
+
+    const handleViewInvites = (e) => {
+        e.preventDefault()
+        setViewInvites(true)
+    }
+
+    const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
 
     return (
         <div>
@@ -110,7 +109,8 @@ export const Home = () => {
           <div className="col">
             <div className="mx-5" style={{marginTop: 25}}>
                 <h3 style={{marginBottom: 25, float: "left"}}><b>Your calendar</b></h3>
-                <button onClick={handleCreateNewEvent} className="mt-2 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0", float: "right"}}>Create new event</button>
+                <button onClick={handleCreateNewEvent} className="mt-2 mx-1 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0", float: "right"}}>Create new event</button>
+                <button onClick={handleViewInvites} className="mt-2 mx-1 btn btn-secondary btn-block" style={{float: "right"}}>Invites</button>
             </div>
           <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}}/>
           </div>

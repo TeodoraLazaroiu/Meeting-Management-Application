@@ -34,6 +34,14 @@ namespace MeetingManagement.Application.Services
             }
         }
 
+        public async Task<ResponseDetailsDTO> GetResponseByIds(string userId, string eventId)
+        {
+            var response = await GetResponseEntity(userId, eventId);
+            var eventEntity = await _eventRepository.GetAsync(eventId) ?? throw new EventNotFoundException();
+
+            return new ResponseDetailsDTO(response, eventEntity, userId);
+        }
+
         public async Task<List<ResponseDetailsDTO>> GetResponsesByEvent(string eventId)
         {
             var responses = await _responseRepository.GetResponsesByEvent(eventId);

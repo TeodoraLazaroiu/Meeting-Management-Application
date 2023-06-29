@@ -6,6 +6,7 @@ export const EventCard = ({eventDate, eventId}) => {
     const [event, setEvent] = useState('');
     const [participants, setParticipants] = useState([]);
     const [createdBy, setCreatedBy] = useState('');
+    const [response, setResponse] = useState('');
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -14,8 +15,7 @@ export const EventCard = ({eventDate, eventId}) => {
     })
 
     useEffect(() => {
-        const getEvent = async () => {
-        await client.get('/event/' + eventId)
+        client.get('/event/' + eventId)
             .then((response) => {
                 setEvent(response.data)
                 setParticipants(response.data.attendesInfo)
@@ -24,8 +24,15 @@ export const EventCard = ({eventDate, eventId}) => {
             .catch((error) => {
                 console.log(error)
             })
-          }
-        getEvent()
+
+        client.get('/response/' + eventId)
+        .then((response) => {
+            setResponse(response.data)
+            console.log(response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     }, [eventId]);
 
     return (
@@ -34,6 +41,7 @@ export const EventCard = ({eventDate, eventId}) => {
             <div className="card-body">
                 <h5 className="card-title">{event.eventTitle}</h5>
                 <div className="text-lg-start mx-4 my-3 card-text">
+                <p><b>Attending: </b>{response.isAttending === null ? <span>N/A</span> : (response.isAttending === true ? <b className="text-success">YES</b> : <b className="text-danger">NO</b>)}</p>
                 <p><b>Description: </b>{event.eventDescription === "" ? "N/A" : event.eventDescription}</p>
                 <p><b>Date: </b>{moment(eventDate).format('MMMM Do YYYY')}</p>
                 <p><b>Time: </b>{event.startTime} - {event.endTime}</p>

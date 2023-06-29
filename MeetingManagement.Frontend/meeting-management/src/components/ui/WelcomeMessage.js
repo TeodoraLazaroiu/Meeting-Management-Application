@@ -8,10 +8,10 @@ export const WelcomeMessage = () => {
             <span style={{color: "#3474b0"}}>Management</span>
             </h1>
             <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />
-            Eveniet, itaque accusantium odio, soluta, corrupti aliquam<br />
-            quibusdam tempora at cupiditate qui eum maiores libero<br />
-            veritatis? Dicta facilis sint aliquid ipsum atque?<br />
+            Streamline your meetings with an all-in-one solution for seamless<br/>
+            collaboration. Forget about chaotic schedules, missed agendas, and<br/>
+            disorganized discussions. Experience the power of efficient planning<br/>
+            and real-time agenda tracking that help you <i>stay connected.</i><br/>
             </p>
         </div>
     )

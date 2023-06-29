@@ -33,10 +33,12 @@ export const Login = () => {
               "email": email,
               "password": password
             })
-            .then(() => {
+            .then((response) => {
               setIsSuccessful(true);
+              console.log(response)
             })
             .catch((error) => {
+              console.log(error)
               toast.error(error.response.data)
             });
         }

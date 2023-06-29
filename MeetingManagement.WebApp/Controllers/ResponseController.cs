@@ -20,6 +20,22 @@ namespace MeetingManagement.WebApp.Controllers
             _responseService = responseService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserResponses(string id)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimConstants.UserIdClaim);
+                var response = await _responseService.GetResponseByIds(userId, id);
+                return Ok(response);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserResponses()
         {

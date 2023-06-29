@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TimePicker from "react-bootstrap-time-picker";
+import Select from 'react-select';
 
 export const CreateEventForm = () => {
     const [eventTitle, setEventTitle] = useState('');
@@ -15,12 +16,17 @@ export const CreateEventForm = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
-    const [recurrenceType, setRecurrenceType] = useState('');
+    const [recurrenceType, setRecurrenceType] = useState(0);
     const [separation, setSeparation] = useState(false);
     const [separationCount, setSeparationCount] = useState(0);
     const [recurrenceUnit, setRecurrenceUnit] = useState('');
     const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState([]);
     const [formNumber, setFormNumber] = useState(1);
+    const [teamUsers, setTeamUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [currentUserId, setCurrentUserId] = useState('');
+    const [suggestedIntervals, setSuggestedIntervals] = useState([]);
+    const [clickedSuggestions, setClickedSuggestions] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -39,6 +45,7 @@ export const CreateEventForm = () => {
             else toast.success("Event created successfully")
         })
         .catch((error) => {
+            console.log(error)
             toast.error(error.response.data)
         })
           }
@@ -48,7 +55,7 @@ export const CreateEventForm = () => {
         var event = {
             eventTitle: eventTitle,
             eventDescription: eventDescription,
-            attendes: [],
+            attendes: selectedUsers.map(e => e.value),
             startTime: new Date(startTime * 1000).toISOString().slice(11, 16),
             endTime: new Date(endTime * 1000).toISOString().slice(11, 16),
             isRecurring: isRecurring,
@@ -60,6 +67,7 @@ export const CreateEventForm = () => {
             dayOfWeek: 0,
             dayOfMonth: 0
         }
+        event.attendes.push(currentUserId);
 
         if (recurrenceType === '1') {
             event.daysOfWeek = selectedDaysOfWeek
@@ -74,7 +82,6 @@ export const CreateEventForm = () => {
         {
             event.dayOfMonth = new Date(startDate * 1000).getDate()
         }
-
         console.log(event)
         postEvent(event)
     }
@@ -98,15 +105,68 @@ export const CreateEventForm = () => {
 
     const handleDaysOfWeek = (e) => {
         let days = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-        console.log(days);
         setSelectedDaysOfWeek(days)
       }
 
+    useEffect(() => {
+        if (formNumber === 2)
+        {
+            var userId;
+            client.get('/user')
+            .then((response) => {
+                userId = response.data.id
+                setCurrentUserId(userId)
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            })
+
+            client.get('/team')
+            .then((response) => {
+                var allUsers = response.data.teamMembers
+                var users = allUsers.filter(u => u.id !== userId)
+                setTeamUsers(users)
+            })
+            .catch((error) => {
+                toast.error(error.response.data)
+            })
+        }
+    }, [formNumber]);
+
+    useEffect(() => {
+        if (clickedSuggestions === true)
+        {
+            var data = {
+                attendes: selectedUsers.map(e => e.value),
+                date: new Date(startDate).toLocaleDateString('en-GB')
+            }
+            data.attendes.push(currentUserId);
+
+            console.log(data)
+            client.post('/event/intervals', data)
+            .then((response) => {
+                console.log(response)
+                setSuggestedIntervals(response.data)
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            })
+            setClickedSuggestions(false)
+        }
+    }, [clickedSuggestions]);
+
+    useEffect(() => {
+        if (startDate !== '' && endDate === '')
+        {
+            setEndDate(startDate)
+        }
+    }, [startDate]);
+
     if (formNumber === 1) return (
-        <div onSubmit={handleCreateEvent} className="card bg-light" style={{maxWidth: 450}}>
+        <div className="card bg-light" style={{maxWidth: 450}}>
             <div className="card-header"><b>Create new event</b></div>
             <div className="card-body text-start">
-            <form className="needs-validation" noValidate>
+            <form autoComplete="off" className="needs-validation" noValidate>
               <div className="form-outline mb-2">
                 <label className="form-label" htmlFor="eventTitle">Event Title</label>
                 <input type="text" id="eventTitle" className="form-control"
@@ -134,25 +194,13 @@ export const CreateEventForm = () => {
                 </div>
             </div>
 
-            <div className="row">
-                <div className="col-sm-6 form-outline mb-2">
-                    <label className="form-label" htmlFor="startTime">Start Time</label>
-                    <TimePicker timeFormat="HH:mm" id="startTime" start="7:00" end="20:00" className="form-select" value={startTime} onChange={(start) => setStartTime(start)} required/>
-                </div>
-
-                <div className="col-sm-6 form-outline mb-2">
-                    <label className="form-label" htmlFor="endTime">End Time</label>
-                    <TimePicker timeFormat="HH:mm" id="endTime" start="7:00" end="20:00" className="form-select" value={endTime} onChange={(end) => setEndTime(end)} required/>
-                </div>
-            </div>
-
             <div className="row container">
                 <div className="col-sm-6 my-3 form-check">
                     <label className="form-check-label" htmlFor="isRecurring">Recurring Meeting</label>
                     <input type="checkbox" className="form-check-input" id="isRecurring" value={isRecurring} onClick={handleRecurringCheckbox}/>
                 </div>
                 
-                {recurrenceType !== '' &&
+                {recurrenceType !== 0 &&
                 <div className="col-sm-6 my-3 form-check">
                     <label className="form-check-label" htmlFor="separation">Repeat every {recurrenceUnit}</label>
                     <input type="checkbox" className="form-check-input" id="separation" value={!separation} onClick={() => setSeparation(!separation)} checked={!separation}/>
@@ -202,10 +250,71 @@ export const CreateEventForm = () => {
                 </div>}
 
               <div className="row container-fluid">
+              <button type="button" className="mx-2 col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}} onClick={(e) => setFormNumber(2)}>
+                Next
+              </button>
+              </div>
+            </form>
+            </div>
+        </div>
+    )
+
+    if (formNumber === 2) return (
+        <div onSubmit={handleCreateEvent} className="card bg-light" style={{maxWidth: 450}}>
+            <div className="card-header"><b>Create new event</b></div>
+            <div className="card-body text-start">
+            <form autoComplete="off" className="needs-validation" noValidate>
+
+            <div className="row">
+                <div className="col-sm-6 form-outline mb-2">
+                    <label className="form-label" htmlFor="startDate">Start Date</label>
+                    <DatePicker dateFormat="dd-MM-yyyy" id="startDate" className="form-control" value={startDate} selected={startDate} onChange={(start) => setStartDate(start)} required/>
+                </div>
+
+                <div className="col-sm-6 form-outline mb-2">
+                    <label className="form-label" htmlFor="endDate">End Date</label>
+                    <DatePicker dateFormat="dd-MM-yyyy" id="endDate" className="form-control" value={endDate} selected={endDate} onChange={(end) => setEndDate(end)} required/>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-sm-6 form-outline mb-2">
+                    <label className="form-label" htmlFor="startTime">Start Time</label>
+                    <TimePicker initialValue="00:00" format={24} id="startTime" start="7:00" end="20:00" className="form-select" value={startTime} onChange={(start) => setStartTime(start)} required/>
+                </div>
+
+                <div className="col-sm-6 form-outline mb-2">
+                    <label className="form-label" htmlFor="endTime">End Time</label>
+                    <TimePicker initialValue="00:00" format={24} id="endTime" start="7:00" end="20:00" className="form-select" value={endTime} onChange={(end) => setEndTime(end)} required/>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="form-outline my-2">
+                    <label className="form-label" htmlFor="users">Add participants</label>
+                    <Select isMulti id="users" options={teamUsers.map(e => ({ value: e.id, label: e.firstName + " " + e.lastName}))} name="users" className="basic-multi-select" classNamePrefix="select"
+                    onChange={(e) => setSelectedUsers(e)} required/>
+                </div>
+            </div>
+
+            <div className="my-3 row container-fluid">
+              <button onClick={() => setFormNumber(1)} type="button" className="mx-2 col-sm-3 btn btn-secondary btn-block">
+                Back
+              </button>
               <button type="submit" className="col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}}>
                 Create
               </button>
               </div>
+
+              <div className="my-3 row container-fluid">
+              <button onClick={() => setClickedSuggestions(true)} type="button" className="mx-2 col-sm-6 btn btn-outline-dark btn-block">
+                Get suggestions {suggestedIntervals.length !== 0 && <i class="bi bi-arrow-counterclockwise"></i>}</button>
+              </div>
+
+              <div className="my-3 row container-fluid">
+              {suggestedIntervals.length !== 0 && suggestedIntervals.map(i => <div class="border border-dark text-center rounded mx-2 col-sm-3">{i.startTime} - {i.endTime} <i class="bi bi-clock"></i></div>)}
+              </div>
+
             </form>
             </div>
         </div>
