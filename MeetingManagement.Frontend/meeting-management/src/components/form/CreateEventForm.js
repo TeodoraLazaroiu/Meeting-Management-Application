@@ -308,11 +308,11 @@ export const CreateEventForm = () => {
 
               <div className="my-3 row container-fluid">
               <button onClick={() => setClickedSuggestions(true)} type="button" className="mx-2 col-sm-6 btn btn-outline-dark btn-block">
-                Get suggestions {suggestedIntervals.length !== 0 && <i class="bi bi-arrow-counterclockwise"></i>}</button>
+                Get suggestions {suggestedIntervals.length !== 0 && <i className="bi bi-arrow-counterclockwise"></i>}</button>
               </div>
 
               <div className="my-3 row container-fluid">
-              {suggestedIntervals.length !== 0 && suggestedIntervals.map(i => <div class="border border-dark text-center rounded mx-2 col-sm-3">{i.startTime} - {i.endTime} <i class="bi bi-clock"></i></div>)}
+              {suggestedIntervals.length !== 0 && suggestedIntervals.map(i => <div className="border border-dark text-center rounded mx-2 col-sm-3">{i.startTime} - {i.endTime} <i className="bi bi-clock"></i></div>)}
               </div>
 
             </form>

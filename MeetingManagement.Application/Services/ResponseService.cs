@@ -1,5 +1,4 @@
-﻿using MeetingManagement.Application.DTOs;
-using MeetingManagement.Application.DTOs.Response;
+﻿using MeetingManagement.Application.DTOs.Response;
 using MeetingManagement.Application.Exceptions;
 using MeetingManagement.Application.Interfaces;
 using MeetingManagement.Core.Entities;
@@ -77,6 +76,19 @@ namespace MeetingManagement.Application.Services
 
 		public async Task UpdateResponse(string userId, UserResponseDTO userResponse)
 		{
+			if (userResponse.IsAttending == false)
+			{
+				if (userResponse.SendReminder == true || (userResponse.ReminderTime != null && userResponse.ReminderTime != 0))
+					throw new ResponseValidationException();
+			}
+			else
+			{
+				if (userResponse.SendReminder == true && (userResponse.ReminderTime == null || userResponse.ReminderTime == 0))
+                    throw new ResponseValidationException();
+                if (userResponse.SendReminder == false && userResponse.ReminderTime != null && userResponse.ReminderTime != 0)
+                    throw new ResponseValidationException();
+            }
+
 			var response = await GetResponseEntity(userId, userResponse.EventId);
 			response.IsAttending = userResponse.IsAttending;
 			response.SendReminder = userResponse.SendReminder;

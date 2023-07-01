@@ -47,7 +47,7 @@ export const EventCard = ({eventDate, eventId}) => {
         <div className="card bg-light" style={{maxWidth: 450}}>
             <div className="card-header"><b>Meeting details</b></div>
                 <div className="card-body">
-                    <div class="spinner-border" role="status"></div>
+                    <div className="spinner-border" role="status"></div>
                 </div>
         </div>
     )

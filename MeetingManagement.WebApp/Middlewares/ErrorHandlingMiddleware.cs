@@ -73,6 +73,10 @@ namespace MeetingManagement.WebApp.Middlewares
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorResponse = "The response was not found";
                     break;
+                case ResponseValidationException:
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse = "The response is not valid";
+                    break;
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;

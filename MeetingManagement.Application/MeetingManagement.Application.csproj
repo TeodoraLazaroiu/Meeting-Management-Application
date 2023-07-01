@@ -22,6 +22,7 @@
     <None Remove="DTOs\Event\" />
     <None Remove="DTOs\Response\" />
     <None Remove="DTOs\Mail\" />
+    <None Remove="Exceptions\ResponseValidationException.xs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTOs\Event\" />
