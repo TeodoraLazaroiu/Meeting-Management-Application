@@ -228,11 +228,7 @@ namespace MeetingManagement.Application.Services
 
             var events = await _eventRepository.GetEventsForUserIds(users);
 
-            // remove this ?
-            var eventsForDate = events.Where(x => DateOnly.FromDateTime(x.StartDate)
-                <= selectedDate && DateOnly.FromDateTime(x.EndDate) >= selectedDate).ToList();
-
-            var eventOccurencesForDate = await GetEventsOccurences(eventsForDate,
+            var eventOccurencesForDate = await GetEventsOccurences(events,
                     selectedDate.Year, selectedDate.Month, selectedDate.Day);
 
             var teamDetails = await _teamService.GetTeamByUserId(userId);
@@ -248,7 +244,7 @@ namespace MeetingManagement.Application.Services
             foreach (var eventOccurence in eventOccurencesForDate)
             {
                 int startHour, endHour;
-                var hourMinutes = eventOccurence.EndTime.Split(":").Select(Int32.Parse).ToList();
+                var hourMinutes = eventOccurence.StartTime.Split(":").Select(Int32.Parse).ToList();
                 var startTime = new TimeOnly(hourMinutes[0], hourMinutes[1]);
                 startHour = startTime.Hour;
 
