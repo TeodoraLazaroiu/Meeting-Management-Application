@@ -105,6 +105,7 @@ export const InvitesCard = () => {
     <div className="card-body">
         <h5 className="card-title"></h5>
             <div className="text-lg-start mx-4 card-text">
+            {responses.length !== 0 &&
             <table className="table">
             <thead>
                 <tr>
@@ -115,7 +116,7 @@ export const InvitesCard = () => {
                 </tr>
             </thead>
             <tbody>
-                {responses.length !== 0 && responses.map((e) => <tr key={e.eventId}>
+                {responses.map((e) => <tr key={e.eventId}>
                 <td>{e.eventTitle}</td>
                 <td>{e.isAttending === null ? <span>N/A</span> : (e.isAttending === true ?
                 <b className="text-success">YES</b> : <b className="text-danger">NO</b>)}</td>
@@ -127,7 +128,10 @@ export const InvitesCard = () => {
                     Edit</button></td>
                 </tr>)}
             </tbody>
-        </table>
+        </table>}
+        {responses.length === 0 && 
+        <p className='text-center'>You have no invites</p>
+        }
             </div>
         </div>}
 

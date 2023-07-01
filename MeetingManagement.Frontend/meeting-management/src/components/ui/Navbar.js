@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import AuthContext from '../../utils/AuthContext';
 import { toast } from 'react-toastify';
 
 export const Navbar = () => {
+    const [userName, setUserName] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
       withCredentials: true,
@@ -17,9 +18,20 @@ export const Navbar = () => {
             setAuthenticated(false)
           })
           .catch((error) => {
-            toast.error(error.response.data)
+            console.log(error.response.data)
           });
     }
+
+    useEffect(() => {
+      client.get('/user')
+          .then((response) => {
+            console.log(response.data)
+            setUserName(response.data.firstName + " " + response.data.lastName)
+          })
+          .catch((error) => {
+            console.log(error)
+          });
+    }, []);
 
     const { setAuthenticated } = useContext(AuthContext);
 
@@ -31,10 +43,13 @@ export const Navbar = () => {
             <span className="" style={{color: "#3474b0"}}>Management</span>
             </h5>
         </Link>
-        <div className="text-lg-start navbar-nav">
+        <div className="navbar-nav">
             <Link className="nav-item nav-link active" to="/home">Home</Link>
             <Link className="nav-item nav-link" to="/team">Team</Link>
             <Link onClick={handleLogout} className="nav-item nav-link" to="/login">Logout</Link>
+        </div>
+        <div className="ms-auto mx-5">
+        <Link className="navbar-text nav-item nav-link" to="/home">Welcome, {userName}</Link>
         </div>
     </nav>
     )

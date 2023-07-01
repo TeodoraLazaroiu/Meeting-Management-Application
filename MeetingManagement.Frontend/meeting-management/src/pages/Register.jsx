@@ -82,7 +82,7 @@ export const Register = () => {
         })
         .then(() => {
           setAuthenticated(true);
-          navigate('/home')
+          navigate('/join')
         })
         .catch((error) => {
           toast.error(error.response.data)

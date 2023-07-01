@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -8,6 +10,7 @@ export const EventCard = ({eventDate, eventId}) => {
     const [participants, setParticipants] = useState([]);
     const [createdBy, setCreatedBy] = useState('');
     const [response, setResponse] = useState('');
+    const [userId, setUserId] = useState('');
 
     const apiUrl = process.env.REACT_APP_API_URL
     const client = axios.create({
@@ -31,7 +34,6 @@ export const EventCard = ({eventDate, eventId}) => {
         client.get('/response/' + eventId)
         .then((response) => {
             setResponse(response.data)
-            console.log(response.data)
         })
         .catch((error) => {
             console.log(error)
@@ -42,6 +44,30 @@ export const EventCard = ({eventDate, eventId}) => {
             })
         })
     }, [eventId]);
+
+    useEffect(() => {
+        client.get('/user')
+        .then((response) => {
+            setUserId(response.data.id)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }, []);
+
+    const navigate = useNavigate()
+    const handleDeleteEvent = () => {
+        client.delete('/event?eventId=' + eventId)
+        .then(() => {
+            toast.success("Event deleted successfully")
+                setTimeout(function() {
+                    navigate(0)
+                }, 2000);
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
 
     if (isLoading) return (
         <div className="card bg-light" style={{maxWidth: 450}}>
@@ -65,6 +91,7 @@ export const EventCard = ({eventDate, eventId}) => {
                 <p><b>Type: </b>{event.isRecurring ? "Recurring" : "Nonrecurring"}</p>
                 <p><b>Participants: </b>{participants.map((attendee) => <li key={attendee.id}>{attendee.firstName} {attendee.lastName}</li>)}</p>
                 <p><b>Created by: </b>{createdBy.firstName + " " + createdBy.lastName}</p>
+                {userId === createdBy.id && <button onClick={handleDeleteEvent} type="button" className="btn btn-outline-danger">Delete</button>}
                 </div>
             </div>
         </div>

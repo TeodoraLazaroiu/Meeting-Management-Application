@@ -66,7 +66,7 @@ namespace MeetingManagement.WebApp.Middlewares
                     errorResponse = "The event was not found";
                     break;
                 case EventDeletionException:
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     errorResponse = exception.Message;
                     break;
                 case ResponseNotFoundException:

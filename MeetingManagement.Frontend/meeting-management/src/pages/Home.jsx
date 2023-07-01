@@ -111,11 +111,11 @@ export const Home = () => {
         <div className="row">
           <div className="col">
             <div className="mx-5" style={{marginTop: 25}}>
-                <h3 style={{marginBottom: 25, float: "left"}}><b>Your calendar</b></h3>
+                <h3 style={{marginBottom: 25, float: "left"}}><b onClick={() => window.location.reload()}>Your calendar</b></h3>
                 <button onClick={handleCreateNewEvent} className="mt-2 mx-1 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0", float: "right"}}>Create new event</button>
                 <button onClick={handleViewInvites} className="mt-2 mx-1 btn btn-secondary btn-block" style={{float: "right"}}>Invites</button>
             </div>
-          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 500, margin: "50px"}} popup/>
+          <Calendar date={date} onNavigate={onNavigate} localizer={localizer} events={events} onSelectEvent={onSelectEvent} style={{width: 700, height: 550, margin: "50px"}} popup/>
           </div>
           <div className="col mx-2 my-5">
           {selectedEvent && <EventCard eventDate={selectedEventDate} eventId={eventId}/>}

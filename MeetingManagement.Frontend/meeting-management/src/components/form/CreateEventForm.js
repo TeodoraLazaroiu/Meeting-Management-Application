@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TimePicker from "react-bootstrap-time-picker";
 import Select from 'react-select';
+import { useNavigate } from 'react-router-dom'
 
 export const CreateEventForm = () => {
     const [eventTitle, setEventTitle] = useState('');
@@ -34,6 +35,7 @@ export const CreateEventForm = () => {
       baseURL: apiUrl
     })
 
+    const navigate = useNavigate()
     const postEvent = async (eventJson) => {
         await client.post('/event', eventJson)
         .then((response) => {
@@ -42,7 +44,13 @@ export const CreateEventForm = () => {
             {
                 toast.error(response)
             }
-            else toast.success("Event created successfully")
+            else
+            {
+                toast.success("Event created successfully")
+                setTimeout(function() {
+                    navigate(0)
+                }, 2000);
+            }
         })
         .catch((error) => {
             console.log(error)
@@ -70,7 +78,7 @@ export const CreateEventForm = () => {
         event.attendes.push(currentUserId);
 
         if (recurrenceType === '1') {
-            event.daysOfWeek = selectedDaysOfWeek
+            event.daysOfWeek = selectedDaysOfWeek.map(e => e.value)
         }
         else if (recurrenceType === '2')
         {
@@ -89,7 +97,7 @@ export const CreateEventForm = () => {
     const handleRecurringCheckbox = () => {
         if (isRecurring) 
         {
-            setRecurrenceType('')
+            setRecurrenceType(0)
             setSeparation(false)
         }
         setIsRecurring(!isRecurring)
@@ -102,11 +110,6 @@ export const CreateEventForm = () => {
         else if (e.target.value === "3") setRecurrenceUnit('month')
         else setRecurrenceType('')
     }
-
-    const handleDaysOfWeek = (e) => {
-        let days = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-        setSelectedDaysOfWeek(days)
-      }
 
     useEffect(() => {
         if (formNumber === 2)
@@ -161,6 +164,29 @@ export const CreateEventForm = () => {
             setEndDate(startDate)
         }
     }, [startDate]);
+    
+    const handleNextClick = (e) => {
+        e.preventDefault()
+
+        var form = document.querySelector('.needs-validation');
+        form.classList.add('was-validated');
+
+        if (form.checkValidity())
+        {
+            setFormNumber(2);
+            form.classList.remove('was-validated');
+        }
+    }
+
+    const daysOfWeekOptions = [
+        { value: '1', label: 'Monday' },
+        { value: '2', label: 'Tuesday' },
+        { value: '3', label: 'Wednesday' },
+        { value: '4', label: 'Thursday' },
+        { value: '5', label: 'Friday' },
+        { value: '6', label: 'Saturday' },
+        { value: '7', label: 'Sunday' },
+      ]
 
     if (formNumber === 1) return (
         <div className="card bg-light" style={{maxWidth: 450}}>
@@ -213,7 +239,7 @@ export const CreateEventForm = () => {
                         <div className="col-sm-6 form-outline mb-2">
                             <label className="mb-2" htmlFor="recurrenceType">Recurrence Type</label>
                             <select className="form-select" id="recurrenceType" onChange={handleRecurrenceType}>
-                                <option disabled selected> -- select option -- </option>
+                                <option disabled selected>-</option>
                                 <option value="1">Daily</option>
                                 <option value="2">Weekly</option>
                                 <option value="3">Monthly</option>
@@ -222,9 +248,9 @@ export const CreateEventForm = () => {
 
                 {(separation && recurrenceType !== '' && recurrenceType !== '1') &&
                     <div className="col-sm-6 form-outline mb-2">
-                        <label className="mb-2" htmlFor="separationCount">Repeat every ..</label>
-                        <select className="form-select" id="separationCount" onChange={(e) => setSeparationCount(parseInt(e.target.value) - 1)}>
-                            <option disabled selected value> -- select option -- </option>
+                        <label className="mb-2" htmlFor="separationCount">Repeat every</label>
+                        <select className="form-select" id="separationCount" onChange={(e) => setSeparationCount(parseInt(e.target.value) - 1)}  defaultValue="0">
+                            <option value="0" disabled>-</option>
                             <option value="2">2 {recurrenceUnit}s</option>
                             <option value="3">3 {recurrenceUnit}s</option>
                             <option value="4">4 {recurrenceUnit}s</option>
@@ -236,21 +262,14 @@ export const CreateEventForm = () => {
             </div>
 
             {(separation && recurrenceType === "1") &&
-                <div className="form-outline mb-2" style={{height: 150}}>
-                    <label htmlFor="daysOfWeek">Days of week</label>
-                    <select multiple onChange={handleDaysOfWeek} className="form-select" id="daysOfWeek">
-                        <option value="1">Monday</option>
-                        <option value="2">Tuesday</option>
-                        <option value="3">Wednesday</option>
-                        <option value="4">Thursday</option>
-                        <option value="5">Friday</option>
-                        <option value="6">Saturday</option>
-                        <option value="7">Sunday</option>
-                    </select>
+                <div className="form-outline mb-3">
+                    <label className="form-label mb-2" htmlFor="daysOfWeek">Days of week</label>
+                    <Select isMulti id="daysOfWeek" name="daysOfWeek" className="basic-multi-select" classNamePrefix="select"
+                    onChange={(e) => setSelectedDaysOfWeek(e)} options={daysOfWeekOptions} value={selectedDaysOfWeek} required/>
                 </div>}
 
               <div className="row container-fluid">
-              <button type="button" className="mx-2 col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}} onClick={(e) => setFormNumber(2)}>
+              <button type="button" className="mx-2 col-sm-3 btn btn-secondary btn-block" style={{backgroundColor: "#3474b0"}} onClick={handleNextClick}>
                 Next
               </button>
               </div>
@@ -280,12 +299,12 @@ export const CreateEventForm = () => {
             <div className="row">
                 <div className="col-sm-6 form-outline mb-2">
                     <label className="form-label" htmlFor="startTime">Start Time</label>
-                    <TimePicker initialValue="00:00" format={24} id="startTime" start="7:00" end="20:00" className="form-select" value={startTime} onChange={(start) => setStartTime(start)} required/>
+                    <TimePicker initialValue="00:00" format={24} id="startTime" start="7:00" end="22:00" className="form-select" value={startTime} onChange={(start) => setStartTime(start)} required/>
                 </div>
 
                 <div className="col-sm-6 form-outline mb-2">
                     <label className="form-label" htmlFor="endTime">End Time</label>
-                    <TimePicker initialValue="00:00" format={24} id="endTime" start="7:00" end="20:00" className="form-select" value={endTime} onChange={(end) => setEndTime(end)} required/>
+                    <TimePicker initialValue="00:00" format={24} id="endTime" start="7:00" end="22:00" className="form-select" value={endTime} onChange={(end) => setEndTime(end)} required/>
                 </div>
             </div>
 
@@ -308,11 +327,11 @@ export const CreateEventForm = () => {
 
               <div className="my-3 row container-fluid">
               <button onClick={() => setClickedSuggestions(true)} type="button" className="mx-2 col-sm-6 btn btn-outline-dark btn-block">
-                Get suggestions {suggestedIntervals.length !== 0 && <i className="bi bi-arrow-counterclockwise"></i>}</button>
+                Get suggestions</button>
               </div>
 
               <div className="my-3 row container-fluid">
-              {suggestedIntervals.length !== 0 && suggestedIntervals.map(i => <div className="border border-dark text-center rounded mx-2 col-sm-3">{i.startTime} - {i.endTime} <i className="bi bi-clock"></i></div>)}
+              {suggestedIntervals.length !== 0 && suggestedIntervals.map(i => <div className="border border-dark text-center rounded mx-2 col-sm-3">{i.startTime} - {i.endTime}</div>)}
               </div>
 
             </form>
